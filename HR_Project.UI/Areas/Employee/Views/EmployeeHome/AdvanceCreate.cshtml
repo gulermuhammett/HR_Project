@@ -1,0 +1,58 @@
+﻿@using HR_Project.Entities.Entities;
+@model Advance
+
+@if (string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <h2>Create Advance</h2>
+    <form asp-action="AdvanceCreate" asp-controller="EmployeeHome" asp-area="Employee" method="post">
+        <div class="form-group">
+            <input type="hidden" class="form-control" id="UserID" name="UserID" required>
+        </div>
+    
+        <div class="form-group">
+            <label for="Amount">Amount:</label>
+            <input type="number" class="form-control" id="Amount" name="Amount" required>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.Currency" class="control-label"></label>
+            <select asp-for="@Model.Currency" asp-items="@ViewBag.CurrencyList" class="form-select"></select>
+            <span asp-validation-for="@Model.Currency" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.Type" class="control-label"></label>
+            <select asp-for="@Model.Type" asp-items="@ViewBag.AdvanceTypeList" class="form-select"></select>
+            <span asp-validation-for="@Model.Type" class="text-danger"></span>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+}
+else
+{
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="errorModalLabel">Error Message</h5>
+            </div>
+            <div class="modal-body">
+                @ViewBag.ErrorMessage
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.href='@Url.Action("AdvanceIndex", "EmployeeHome", new { area = "Employee" })'">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('#errorModal').modal('show');
+        });
+    </script>
+}
