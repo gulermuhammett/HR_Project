@@ -166,7 +166,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
 
                 }
 
-                string emailBody = $"Hello {user.FirstName},\n\nWelcome to our company.\n\nYour registration to MEZA Human Resources Management System has been completed successfully. Please use the login link to login to your system.\n\nYour required information for login:\n\n Email: {user.Email},\n\nUser Password: {user.Password},\n\nURL:https://www.facebook.com/,\n\nWe wish you success in your working life. MEZA Human Resources.";
+                string emailBody = $"Hello {user.FirstName},\n\nWelcome to our company.\n\nYour registration to MEZA Human Resources Management System has been completed successfully. Please use the login link to login to your system.\n\nYour required information for login:\n\n Email: {user.Email},\n\nUser Password: {user.Password},\n\nURL:https://ciftcikemal.azurewebsites.net,\n\nWe wish you success in your working life. MEZA Human Resources.";
                 EmailService.SendEmail(user.Email, "Welcome to MEZA Human Resources", emailBody);
                 return RedirectToAction("ListUser");
             }
