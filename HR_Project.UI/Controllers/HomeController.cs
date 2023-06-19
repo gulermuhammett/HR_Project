@@ -87,5 +87,13 @@ namespace HR_Project.UI.Controllers
                     return View(loginDTO);
             }
         }
+        
+        public async Task<IActionResult> Logout()
+        {
+
+            await HttpContext.SignOutAsync();
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
