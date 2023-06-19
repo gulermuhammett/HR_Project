@@ -10,7 +10,7 @@ namespace HR_Project.UI.Areas.CompanyManager.Controllers
     [Authorize(Roles = "CompanyManager")]
     public class AdvanceController : Controller
     {
-        string baseURL = "https://localhost:7253";
+        string baseURL = "https://mezaapi-v11.azurewebsites.net";
         static List<Advance> advances = new List<Advance>();
 
         public async Task<IActionResult> Index()

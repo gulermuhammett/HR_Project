@@ -23,7 +23,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
     [Authorize(Roles = "CompanyManager")]
     public class CompanyManagerHomeController : Controller
     {
-        string baseURL = "https://localhost:7253";
+        string baseURL = "https://mezaapi-v11.azurewebsites.net";
         private readonly IWebHostEnvironment _environment;
         private readonly IGenericService<User> service;
         private readonly IMapper mapper;
