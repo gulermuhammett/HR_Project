@@ -176,7 +176,7 @@
                                     <div class="mb-4 pb-2">
                                         <div class="form-outline form-white form-group">
                                             <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
-                                            <input type="text" class="form-control form-control-md" asp-for="PhoneNumber" id="ssn-input" maxlength="13" placeholder="(Please write after +90)" required />
+                                            <input type="text" class="form-control form-control-md" asp-for="PhoneNumber" maxlength="10" placeholder="(Please write after +90)" required />
                                         </div>
                                     </div>
 
@@ -196,32 +196,6 @@
         </div>
     </div>
 </section>
-<script>
-    var input = document.getElementById("ssn-input");
-
-    // Her karakter girildiğinde formatlama işlevini çağırın
-    input.addEventListener("input", formatSSN);
-
-    function formatSSN() {
-        // Girdi değerini alın
-        var value = input.value;
-
-        // Sayılardan oluşan bir dize oluşturun
-        var digits = value.replace(/\D/g, "");
-
-        // Formatlanmış dizeyi oluşturun (örnek: "555-55-55")
-        var formattedValue = "";
-        for (var i = 0; i < digits.length; i++) {
-            if (i === 3 || i === 6 || i === 8) {
-                formattedValue += "-";
-            }
-            formattedValue += digits.charAt(i);
-        }
-
-        // Formatlanmış değeri girdi alanına yerleştirin
-        input.value = formattedValue;
-    }
-</script>
 
 
 <script>

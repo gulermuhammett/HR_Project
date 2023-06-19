@@ -168,7 +168,7 @@
                                 <p class="mb-0">Birthdate</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0" type="date" data-date="" data-date-format="DD MMMM YYYY">@Model.Birthdate</p>
+                                <p class="text-muted mb-0" type="date" data-date="" data-date-format="DD MMMM YYYY">@Model.FormattedBirthdate</p>
                             </div>
                         </div>
 
@@ -195,7 +195,7 @@
                                 <p class="mb-0">Phone</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">@Model.PhoneNumber</p>
+                                <p class="text-muted mb-0">@string.Format("{0:0(###) ###-####}", double.Parse(Model.PhoneNumber))</p>
                             </div>
                         </div>
 

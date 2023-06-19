@@ -16,6 +16,7 @@ using System.Net.Mail;
 using HR_Project.UI.Areas.CompanyManager.Models;
 using HR_Project.UI.Models;
 using HR_Project.Repositories.Migrations;
+using System.ComponentModel;
 
 namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
 {
@@ -51,6 +52,8 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
             return View(user);
         }
 
+        static List<Department> departments;
+        static List<Job> jobs;
 
         [HttpGet]
         public async Task<IActionResult> AddUser()
@@ -63,10 +66,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                              Text = g.ToString()
                          })
                          .ToList();
-
-
-
-            List<Department> departments = new List<Department>();
+            departments = new();
             using (var httpClient = new HttpClient())
             {
                 using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
@@ -76,8 +76,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 }
 
             }
-
-            List<Job> jobs = new List<Job>();
+            jobs = new();
             using (var httpClient = new HttpClient())
             {
                 using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
@@ -103,10 +102,47 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser(User user, List<IFormFile> files)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View("AddUser");
-            //}
+            if (!ModelState.IsValid)
+            {
+                ViewBag.GenderList = Enum.GetValues(typeof(Gender))
+                         .Cast<Gender>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+                departments = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        departments = JsonConvert.DeserializeObject<List<Department>>(apiResult);
+                    }
+
+                }
+                jobs = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
+                    }
+
+                }
+
+                var userDTo = new AddUserDTO()
+                {
+                    JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),
+                    DepartmentList = departments.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.DepartmentName }).ToList(),
+                };
+                ViewBag.AddUserDTO = userDTo;
+                ViewBag.jobList = jobs;
+                ViewBag.departmentList = departments;
+                return View("AddUser");
+            }
             user.Role = Roles.Employee;
             user.CompanyID = Convert.ToInt32(HttpContext.User.FindFirst("CompanyID").Value);
             user.IsActive = true;
@@ -155,7 +191,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                     users = JsonConvert.DeserializeObject<List<User>>(apiResult);
                 }
             }
-            List<User> empUsers = users.Where(x => x.Role == Roles.Employee && x.IsActive == true && x.Job !=null && x.Department !=null).ToList();
+            List<User> empUsers = users.Where(x => x.Role == Roles.Employee && x.IsActive == true && x.Job != null && x.Department != null).ToList();
 
             return View(empUsers);
         }
@@ -164,8 +200,8 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
         public async Task<IActionResult> UserUpdate(int id)
         {
 
-            List<Department> departments = new List<Department>();
-            List<Job> jobs = new List<Job>();
+            departments = new List<Department>();
+            jobs = new List<Job>();
 
             using (var httpClient = new HttpClient())
             {
@@ -215,7 +251,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
         public async Task<IActionResult> UserUpdate(UpdateUserDTO updateUserDTO, List<IFormFile> files)
         {
             if (!ModelState.IsValid)
-            {
+            {                
                 return View("UserUpdate");
             }
             string returnedMessaage = Upload.ImageUpload(files, _environment, out bool imgresult);
@@ -227,7 +263,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
             //updateduser.PhoneNumber = updateUserDTO.PhoneNumber;
             //updateduser.Photo = returnedMessaage;
             //updateduser. = updateUserDTO.FirstName;
-            
+
             using (var httpClient = new HttpClient())
             {
                 using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByID/{updateUserDTO.ID}"))
@@ -238,10 +274,10 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 }
                 if (imgresult)
                     updateduser.Photo = returnedMessaage;
-                
+
 
                 //updateduser = mapper.Map<UpdateUserDTO,User >(updateUserDTO);
-                
+
                 updateduser.FirstName = updateUserDTO.FirstName;
                 updateduser.FirstName2 = updateUserDTO.FirstName2;
                 updateduser.LastName = updateUserDTO.LastName;
@@ -265,7 +301,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 }
             }
 
-            if (updateduser.Role==Roles.CompanyManager)
+            if (updateduser.Role == Roles.CompanyManager)
             {
                 return RedirectToAction("Index");
             }
@@ -294,5 +330,34 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 mailMessage.Body = body; // Diğer e-posta ayarları... client.Send(mailMessage); } 
             }
         }
+
+        //public async Task<List<Department>> FillDepartments()
+        //{
+        //    departments = new();
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
+        //        {
+        //            string apiResult = await answ.Content.ReadAsStringAsync();
+        //            departments = JsonConvert.DeserializeObject<List<Department>>(apiResult);
+        //        }
+        //    }
+        //    return departments;
+        //}
+        //public async Task<List<Job>> FillJobs()
+        //{
+        //    jobs = new();
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
+        //        {
+        //            string apiResult = await answ.Content.ReadAsStringAsync();
+        //            jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
+        //        }
+        //    }
+        //    return jobs;
+        //}
+
+
     }
 }

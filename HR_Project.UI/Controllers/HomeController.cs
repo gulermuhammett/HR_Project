@@ -91,8 +91,7 @@ namespace HR_Project.UI.Controllers
         public async Task<IActionResult> Logout()
         {
 
-            await HttpContext.SignOutAsync();
-            HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync();            
             return RedirectToAction("Index", "Home");
         }
     }

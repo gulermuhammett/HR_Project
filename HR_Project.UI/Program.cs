@@ -19,7 +19,7 @@ namespace HR_Project.UI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation().AddFluentValidation
-            (fv => fv.RegisterValidatorsFromAssemblyContaining<HR_Project.Entities.UserValidator.UserValidator>());
+            (fv => fv.RegisterValidatorsFromAssemblyContaining<HR_Project.Entities.UserValidator.UserValidator>()).AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<HR_Project.Entities.UserValidation.AdvanceValidator>());
 
             builder.Services.AddDbContext<HRProjectContext>(option =>
             {

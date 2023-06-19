@@ -16,7 +16,7 @@ using System.Text;
 namespace HR_Project.UI.Areas.Employee.Controllers
 {
     [Area("Employee")]
-    //[Authorize(Roles = "Employee")]
+    [Authorize(Roles = "Employee")]
     public class EmployeeHomeController : Controller
     {
         string baseURL = "https://mezaapi-v11.azurewebsites.net";
@@ -289,7 +289,6 @@ namespace HR_Project.UI.Areas.Employee.Controllers
             }
             else
             {
-
                 using (var httpClient = new HttpClient())
                 {
                     advance.UserID = Convert.ToInt32(HttpContext.User.FindFirst("ID").Value);
@@ -299,27 +298,21 @@ namespace HR_Project.UI.Areas.Employee.Controllers
                         string apiResult = await answ.Content.ReadAsStringAsync();
 
                     }
-
                 }
-
             }
-
             return RedirectToAction("AdvanceIndex");
         }
 
         [HttpGet]
         public async Task<IActionResult> AdvanceDelete(int id)
         {
-
             using (var httpClient = new HttpClient())
             {
-
                 using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/DeleteAdvance/{id}"))
                 {
                     string apiResult = await answ.Content.ReadAsStringAsync();
 
                 }
-
             }
             return RedirectToAction("AdvanceIndex");
         }

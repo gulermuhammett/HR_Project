@@ -53,7 +53,7 @@ namespace HR_Project.Entities.UserValidator
                 totalY2 += int.Parse(tcKimlikNo[i].ToString());
             }
 
-            bool isRuleY = ((totalY1 * 7) - totalY2) % 10 == int.Parse(tcKimlikNo[9].ToString());
+            bool isRuleY = ((totalY1 * 7) - totalY2) % 10 == 0;
 
             return isRuleX && isRuleY;
         }
