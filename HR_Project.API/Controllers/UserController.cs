@@ -34,6 +34,17 @@ namespace HR_Project.API.Controllers
         [HttpGet]
         public IActionResult Login(string email, string password)
         {
+            if (email==null)
+            {
+                return BadRequest("Please entry your email !");
+            }
+            else
+            {
+                if (password==null)
+                {
+                    return BadRequest("Please entry your password !");
+                }
+            }
             if (serviceUser.Any(x => x.Email == email))
             {
                 User loggeduser = serviceUser.GetByDefault(x => x.Email == email && x.Password == password);

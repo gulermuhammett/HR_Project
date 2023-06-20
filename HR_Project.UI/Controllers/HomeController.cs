@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Net;
 using System.Security.Claims;
 
 namespace HR_Project.UI.Controllers
@@ -28,14 +29,40 @@ namespace HR_Project.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
+            if (loginDTO.Email==null)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError(string.Empty, "Please entry your email !");
+                return View("Index");
+            }
+            else
+            {
+                if (loginDTO.Password==null)
+                {
+                    ModelState.Clear();
+                    ModelState.AddModelError(string.Empty, "Please entry your password !");
+                    return View("Index");
+                }
+            }
             User loggedUser = new User();
             User user = new User();
             using (var httpClient = new HttpClient())
             {
                 using (var cevap = await httpClient.GetAsync($"{url}/api/User/Login?email={loginDTO.Email}&password={loginDTO.Password}"))
                 {
-                    string apiCevap = await cevap.Content.ReadAsStringAsync();
-                    loggedUser = JsonConvert.DeserializeObject<User>(apiCevap);
+                    
+                    if (cevap.IsSuccessStatusCode)
+                    {
+                        string apiCevap = await cevap.Content.ReadAsStringAsync();
+                        loggedUser = JsonConvert.DeserializeObject<User>(apiCevap);
+                    }
+                    else if (cevap.StatusCode == HttpStatusCode.BadRequest || cevap.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        string errorMessage = await cevap.Content.ReadAsStringAsync();
+                        ModelState.AddModelError(string.Empty, errorMessage);
+                        return View("Index");
+                    }
+                    
                 }
                 using (var answ = await httpClient.GetAsync($"{url}/api/User/GetUserByIdInclude/{loggedUser.ID}"))
                 {

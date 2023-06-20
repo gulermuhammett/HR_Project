@@ -74,6 +74,7 @@
                                             <div class="form-outline">
                                                 <label class="form-label" asp-for="FirstName">First Name</label>
                                                 <input asp-for="FirstName" class="form-control form-control-md" />
+                                                <span asp-validation-for="FirstName" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="col-md-6 mb-4 pb-2">
@@ -81,6 +82,8 @@
                                             <div class="form-outline">
                                                 <label class="form-label" asp-for="LastName">Last Name</label>
                                                 <input asp-for="LastName" class="form-control form-control-md" />
+                                                <span asp-validation-for="LastName" class="text-danger"></span>
+                                                <span></span>
                                             </div>
 
                                         </div>
@@ -90,15 +93,16 @@
                                             <div class="form-outline">
                                                 <label class="form-label" asp-for="FirstName2">First Name-2</label>
                                                 <input asp-for="FirstName2" class="form-control form-control-md" />
+                                                <span asp-validation-for="FirstName2" class="text-danger"></span>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mb-4 pb-2">
 
+                                        <div class="col-md-6 mb-4 pb-2">
                                             <div class="form-outline">
                                                 <label class="form-label" asp-for="LastName2">Last Name-2</label>
                                                 <input asp-for="LastName2" class="form-control form-control-md" />
+                                                <span asp-validation-for="LastName2" class="text-danger"></span>
                                             </div>
-
                                         </div>
                                     </div>
 
@@ -107,12 +111,14 @@
                                         <select class="form-select form-select-md" aria-label="Default select example" asp-for="JobID" asp-items='new SelectList(jobList, "ID", "JobName")'>
                                             <option value="">Choose Job</option>
                                         </select>
+                                        <span asp-validation-for="JobID" class="text-danger"></span>
                                     </div>
 
                                     <div class="mb-4 pb-2">
                                         <label class="control-label">Department</label>
                                         <select class="form-select form-select-md" aria-label="Default select example" asp-for="DepartmentID" asp-items='new SelectList(departmentList, "ID", "DepartmentName")'>
                                             <option value="">Choose Department</option>
+                                            <span asp-validation-for="DepartmentID" class="text-danger"></span>
                                         </select>
                                     </div>
 
@@ -174,6 +180,14 @@
                                         <div class="form-outline form-white">
                                             <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
                                             <input type="text" class="form-control form-control-md" asp-for="PhoneNumber" maxlength="10" placeholder="(Please write after +90)" />
+                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4 pb-2">
+                                        <div class="form-outline form-white">
+                                            <label asp-for="Salary" class="control-label">Salary</label>
+                                            <input type="text" class="form-control form-control-md" asp-for="Salary" />
+                                            <span asp-validation-for="Salary" class="text-danger"></span>
                                         </div>
                                     </div>
                                     <input type="submit" value="Add Employee" class="btn btn-primary" />

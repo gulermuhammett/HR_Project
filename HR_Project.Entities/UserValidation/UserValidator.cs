@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HR_Project.Entities.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,36 @@ namespace HR_Project.Entities.UserValidator
         {
             RuleFor(x => x.FirstName).NotEmpty().WithMessage("Firstname can not be empty !");
             RuleFor(x => x.LastName).NotEmpty().WithMessage("Firstname can not be empty !");
-            RuleFor(x => x.Address).NotEmpty().WithMessage("Address can not be empty !").Length(10, 100).WithMessage("Address must be between 10-100 character !");
+            RuleFor(x => x.Address).NotEmpty().WithMessage("Address can not be empty !").MinimumLength(3).WithMessage("Address must be at least 3 character").MaximumLength(100).WithMessage("Address must be max 100 character");
             RuleFor(x => x.Birthdate).LessThan(p => DateTime.Now.AddYears(-18)).WithMessage("Employee must be at least 18 years old !");
-            RuleFor(x => x.Salary).NotEmpty().WithMessage("Salary can not be empty !").LessThan(8500).WithMessage("Salary can not less than 8500.. It's minimum salary !");
+            RuleFor(x => x.Salary).NotEmpty().WithMessage("Salary can not be empty !").GreaterThan(8500).WithMessage("Salary can not less than 8500.. It's minimum salary !");
             RuleFor(x => x.TCIdentificationNumber).NotEmpty().WithMessage("Identification Number can not be empty !");
             RuleFor(x => x.TCIdentificationNumber).Must(CheckTCKimlikNo).WithMessage("Invalid Idendification Number");
             RuleFor(x => x.JobID).NotEmpty().WithMessage("Job can not be empty.");
             RuleFor(x => x.DepartmentID).NotEmpty().WithMessage("Department can not be empty.");
             RuleFor(x => x.BirthPlace).NotNull().WithMessage("Birth Place can not be empty.").MaximumLength(50).WithMessage("Birth Place must not exceed 50 characters").MinimumLength(3).WithMessage("Birth lace must be more than 3 characters");
+            RuleFor(x => x.TCIdentificationNumber).Must(BeUniqueIdentification).WithMessage("Identification must be unique.");
 
+        }
+
+        private bool BeUniqueIdentification(string identification)
+        {
+            string baseURL = "https://mezaapi-v11.azurewebsites.net";
+            List<User> users = new List<User>();
+            using (var httpClient = new HttpClient())
+            {
+                using (var result = httpClient.GetAsync($"{baseURL}/api/User/GetAllUserInclude").Result)
+                {
+                    string apiResult = result.Content.ReadAsStringAsync().Result;
+                    users = JsonConvert.DeserializeObject<List<User>>(apiResult);
+                }
+            }
+            List<User> controlUser = users.Where(x => x.TCIdentificationNumber == identification).ToList();
+            if (controlUser.Count()>0)
+            {
+                return false;
+            }
+            return true;
         }
 
         private bool CheckTCKimlikNo(string tcKimlikNo)

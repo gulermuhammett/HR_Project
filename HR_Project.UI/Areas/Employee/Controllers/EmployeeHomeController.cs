@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
 using System.Security.Policy;
 using System.Text;
 
@@ -45,13 +46,9 @@ namespace HR_Project.UI.Areas.Employee.Controllers
             return View(user);
         }
 
-
         static List<Advance> advances = new List<Advance>();
         public async Task<IActionResult> AdvanceIndex()
         {
-
-
-
             using (var httpClient = new HttpClient())
             {
                 using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetAllAdvances/{HttpContext.User.FindFirst("ID").Value}"))
@@ -283,6 +280,75 @@ namespace HR_Project.UI.Areas.Employee.Controllers
         [HttpPost]
         public async Task<IActionResult> AdvanceCreate(Advance advance)
         {
+            User selectedUser = new();
+            using (var httpClient = new HttpClient())
+            {
+                using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByIdInclude/{HttpContext.User.FindFirst("ID").Value}"))
+                {
+                    string apiResult = await answ.Content.ReadAsStringAsync();
+                    selectedUser = JsonConvert.DeserializeObject<List<User>>(apiResult)[0];
+                }
+            }
+
+
+            if (advance.Amount > (double) (selectedUser.Salary * 3) ||advance.Amount<=0)
+            {
+                ViewBag.AmountError = "Requested amount is not valid !";
+                ViewBag.CurrencyList = Enum.GetValues(typeof(Currency))
+                        .Cast<Currency>()
+                        .Select(g => new SelectListItem
+                        {
+                            Value = g.ToString(),
+                            Text = g.ToString()
+                        })
+                        .ToList();
+
+
+
+                if (advances != null)
+                {
+                    foreach (var item in advances)
+                    {
+                        if (item.Type == AdvanceType.Individual && item.Status == Status.Pending)
+                            advanceIndividual = false;
+                        else if (item.Type == AdvanceType.Institutional && item.Status == Status.Pending)
+                            advanceInstitutional = false;
+                    }
+                }
+
+                if (advanceInstitutional == true && advanceIndividual == true)
+                {
+                    ViewBag.AdvanceTypeList = Enum.GetValues(typeof(AdvanceType))
+                                 .Cast<AdvanceType>()
+                                 .Select(g => new SelectListItem
+                                 {
+                                     Value = g.ToString(),
+                                     Text = g.ToString()
+                                 })
+                                 .ToList();
+                }
+                else if (advanceIndividual && !advanceInstitutional)
+                {
+                    ViewBag.AdvanceTypeList = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = AdvanceType.Individual.ToString(), Text = AdvanceType.Individual.ToString() }
+                };
+                }
+                else if (!advanceIndividual && advanceInstitutional)
+                {
+                    ViewBag.AdvanceTypeList = new List<SelectListItem>
+                {
+                    new SelectListItem { Value = AdvanceType.Institutional.ToString(), Text = AdvanceType.Institutional.ToString() }
+                };
+                }
+
+                else
+                {
+                    ViewBag.ErrorMessage = "You cannot create a new advance request unless your existing advance requests are processed by the admin.";
+                }
+                return View("AdvanceCreate");
+            }
+
             if (advanceIndividual == false && advanceInstitutional == false)
             {
 

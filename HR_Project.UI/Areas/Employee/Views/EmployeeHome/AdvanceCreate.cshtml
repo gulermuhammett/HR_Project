@@ -1,5 +1,13 @@
 ﻿@using HR_Project.Entities.Entities;
 @model Advance
+@{
+    string errMess = string.Empty;
+}
+
+@if (ViewBag.AmountError != null)
+{
+    errMess = ViewBag.AmountError.ToString();
+}
 
 @if (string.IsNullOrEmpty(ViewBag.ErrorMessage))
 {
@@ -12,7 +20,10 @@
         <div class="form-group">
             <label for="Amount">Amount:</label>
             <input type="number" class="form-control" id="Amount" name="Amount" required>
-            <span asp-validation-for="@Model.Amount" class="text-danger"></span>
+            @if (errMess!=string.Empty)
+            {
+                <span>@errMess.ToString()</span>
+            }
         </div>
 
         <div class="form-group">

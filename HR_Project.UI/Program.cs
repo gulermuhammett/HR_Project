@@ -4,7 +4,6 @@ using HR_Project.Repositories.Concrete;
 using HR_Project.Repositories.Context;
 using HR_Project.Services.Abstract;
 using HR_Project.Services.Concrete;
-using IK.Ui.Models.Validation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;

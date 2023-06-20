@@ -130,9 +130,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                         string apiResult = await answ.Content.ReadAsStringAsync();
                         jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
                     }
-
                 }
-
                 var userDTo = new AddUserDTO()
                 {
                     JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),

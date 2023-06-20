@@ -17,7 +17,7 @@
     <header>
         <style>
             #intro {
-                background-image: url(https://cdn.ymaws.com/shrmmorris.site-ym.com/resource/resmgr/slideshow/hp_redesign/slider__1__istock-1315600128.jpg);
+                background-image: url('/Uploads/witcher.jpg');
                 background-repeat: no-repeat;
                 background-size: cover;
                 background-position: center center;
@@ -166,11 +166,22 @@
         </style>
         <!-- Background image -->
 
+
+
         <section class="login-block" id="intro">
             <div style="margin-top:150px;" class="container">
                 <div class="row">
                     <div style="margin-top:-45px;" class="col-md-4 login-sec">
                         <h2 class="text-center"><img src="~/Uploads/MazeLogo.png" alt="" class="rounded-circle"></h2>
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <span>@error.ErrorMessage</span>
+                                }
+                            </div>
+                        }
                         <form asp-controller="Home" asp-action="Login" style="margin-top:-20px;" class="login-form">
                             <div class="form-group">
                                 <label for="exampleInputEmail1" class="text-uppercase">Email</label>
@@ -183,7 +194,7 @@
                                 <label for="exampleInputPassword1" class="text-uppercase">Password</label>
                                 <div class="input-container">
                                     <i style="background-color:orange" class="fa fa-key icon"></i>
-                                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="myInput">
+                                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="myInput" nu>
                                     <a href="#"><i style="background-color:orange" class="fa fa-eye icon" onclick="myFunction()"></i></a>
                                 </div>
                             </div>
