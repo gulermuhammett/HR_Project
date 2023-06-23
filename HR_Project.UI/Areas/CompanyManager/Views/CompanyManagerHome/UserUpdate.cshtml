@@ -1,58 +1,120 @@
 ﻿@model UpdateUserDTO
 @{
-    ViewData["Title"] = "AddUser";
+    Layout = "~/Areas/CompanyManager/Views/Shared/_Layouttt.cshtml";
     var jobList = ViewBag.jobList as List<Job>;
     var departmentList = ViewBag.departmentList as List<Department>;
-    Layout = "~/Areas/CompanyManager/Views/Shared/_CompanyManagerLayout.cshtml";
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <style>
-    @@media (min-width: 1025px) {
-        .h-custom {
-            height: 100vh !important;
+    .table img {
+        max-width: 50px; /* Maksimum genişlik */
+        max-height: 50px; /* Maksimum yükseklik */
+        object-fit: cover; /* Orantılı olarak fotoğrafı sığdır */
+        border-radius: 50%; /* Yuvarlak kenarlıklar */
+    }
+
+    span {
+        color: white;
+    }
+
+    th {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    td {
+        font-size: 13px;
+    }
+
+    .pclass {
+        margin-top: 30px;
+    }
+
+    label {
+        color: white;
+    }
+
+    .selectDesign {
+        padding: 10px 15px;
+        background-color: #FFFFFF14;
+    }
+
+    .normalTd {
+        margin-top: -5px;
+    }
+
+    .optionColor > option {
+        background-color: #FFFFFF14;
+        color: black;
+    }
+
+    .formDesign {
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 0;
+        font-family: var(--bs-body-font-family);
+        font-size: var(--bs-body-font-size);
+        font-weight: var(--bs-body-font-weight);
+        line-height: var(--bs-body-line-height);
+        color: var(--bs-body-color);
+        text-align: var(--bs-body-text-align);
+        background-color: rgba(255, 255, 255, 0.08);
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .form-group select{
+        background-color: rgba(255, 255, 255, 0.08);
+        border: hidden;
+        border-block-color: rgba(255, 255, 255, 0.08);
+        color: white;
+    }
+
+    .form-group select:focus {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: white;
+    }
+
+    .form-group input{
+        background-color: rgba(255, 255, 255, 0.08);
+        border:hidden;
+        border-block-color: rgba(255, 255, 255, 0.08);
+        color:white;
+    }
+
+        .form-group input:focus {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color:white;
         }
-    }
 
-    .card-registration .select-input.form-control[readonly]:not([disabled]) {
-        font-size: 1rem;
-        line-height: 2.15;
-        padding-left: .75em;
-        padding-right: .75em;
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
     }
-
-    .card-registration .select-arrow {
-        top: 13px;
-    }
-
-    .gradient-custom-2 {
-        /* fallback for old browsers */
-        background: #a1c4fd;
-        /* Chrome 10-25, Safari 5.1-6 */
-        background: -webkit-linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1));
-        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        background: linear-gradient(to right, rgba(161, 196, 253, 1), rgba(194, 233, 251, 1))
-    }
-
-    .bg-indigo {
-        background-color: #4835d4;
-    }
-
-    @@media (min-width: 992px) {
-        .card-registration-2 .bg-indigo {
-            border-top-right-radius: 15px;
-            border-bottom-right-radius: 15px;
+        .pagination li {
+            margin: 0 5px;
         }
-    }
 
-    @@media (max-width: 991px) {
-        .card-registration-2 .bg-indigo {
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-        }
-    }
+            .pagination li a {
+                color: black;
+                text-decoration: none;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+                .pagination li a.active {
+                    background-color: #ccc;
+                }
+
+                .pagination li a:hover {
+                    background-color: #f5f5f5;
+                }
 </style>
 <head>
 
@@ -60,144 +122,134 @@
     <link href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" rel="stylesheet" />
 
 </head>
-<section style="padding: 0; margin-top:-20px;">
-    <div class="container-fluid">
-        <div class="row d-flex justify-content-center align-items-center h-60">
-            <div class="col-12">
-                <div class="card-body p-0">
-                    <form asp-action="UserUpdate" asp-controller="CompanyManagerHome" asp-area="CompanyManager" method="post" enctype="multipart/form-data">
-                        <div class="row g-0">
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            <div class="form-outline form-group">
-                                                <label class="form-label" asp-for="FirstName">First Name</label>
-                                                <input asp-for="FirstName" class="form-control form-control-md" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-4 pb-2">
-
-                                            <div class="form-outline form-group">
-                                                <label class="form-label" asp-for="LastName">Last Name</label>
-                                                <input asp-for="LastName" class="form-control form-control-md" />
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-4 pb-2">
-                                            <div class="form-outline form-group">
-                                                <label class="form-label" asp-for="FirstName2">First Name-2</label>
-                                                <input asp-for="FirstName2" class="form-control form-control-md" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-4 pb-2">
-
-                                            <div class="form-outline form-group">
-                                                <label class="form-label" asp-for="LastName2">Last Name-2</label>
-                                                <input asp-for="LastName2" class="form-control form-control-md" />
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="mb-4 pb-2 form-group">
-                                        <label asp-for="TCIdentificationNumber" class="control-label"></label>
-                                        <input asp-for="TCIdentificationNumber" class="form-control form-control-md" />
-                                        <span asp-validation-for="TCIdentificationNumber" class="text-danger"></span>
-                                    </div>
-                                    <div class="mb-4 pb-2">
-                                        <label class="control-label">Job</label>
-                                        <select class="form-select form-select-md" aria-label="Default select example" asp-for="JobID" asp-items='new SelectList(jobList, "ID", "JobName")'>
-                                            <option value="">Choose Job</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-4 pb-2">
-                                        <label class="control-label">Department</label>
-                                        <select class="form-select form-select-md" aria-label="Default select example" asp-for="DepartmentID" asp-items='new SelectList(departmentList, "ID", "DepartmentName")'>
-                                            <option value="">Choose Department</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-4 pb-2 form-group">
-                                        <label asp-for="StartDateOfWork" class="control-label">Start Date Of Work</label>
-                                        <input style="width:568.8px; height:38.18px;" asp-for="StartDateOfWork" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
-                                        <span asp-validation-for="StartDateOfWork.Date" class="text-danger"></span>
-                                    </div>
-                                    <div class="mb-4 pb-2 form-group">
-                                        <label asp-for="DismissalDate" class="control-label">Dissmissal Date</label>
-                                        <input style="width:568.8px; height:38.18px;" asp-for="DismissalDate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
-                                        <span asp-validation-for="DismissalDate" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="mb-4 pb-2">
-                                        <div class="form-outline form-group">
-                                            <label asp-for="Photo" for="image-upload" class="form-label">Please Choose An Image</label>
-                                            <input asp-for="Photo" name="files" type="file" id="image-upload" accept=".png, .jpg, .jpeg" class="form-control form-control-md" />
-                                            <span asp-validation-for="Photo" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4 pb-2">
-                                        <div class="form-outline form-white form-group">
-                                            <label asp-for="Birthdate" class="control-label">Birth Date</label>
-                                            <input style="width:568.8px; height:38.18px;" asp-for="Birthdate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
-                                            <span asp-validation-for="Birthdate" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4 pb-2">
-                                        <div class="form-outline form-white form-group">
-                                            <label asp-for="BirthPlace" class="control-label">Birth Place</label>
-                                            <input asp-for="BirthPlace" class="form-control form-control-md" />
-                                            <span asp-validation-for="BirthPlace" class="text-danger"></span>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4 pb-2">
-                                        <div class="form-outline form-white form-group">
-                                            <label asp-for="Address" class="control-label"></label>
-                                            <input asp-for="Address" class="form-control form-control-md" />
-                                            <span asp-validation-for="Address" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4 pb-2">
-                                        <div class="form-outline form-white form-group">
-                                            <label asp-for="Salary" class="control-label"></label>
-                                            <input asp-for="Salary" class="form-control form-control-md" />
-                                            <span asp-validation-for="Salary" class="text-danger"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4 pb-2">
-                                        <div class="form-outline form-white form-group">
-                                            <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
-                                            <input type="text" class="form-control form-control-md" asp-for="PhoneNumber" maxlength="10" placeholder="(Please write after +90)" required />
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <input type="submit" value="Update Employee" class="btn btn-primary" onclick="submitForm()" />
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
+<section id="contact" class="contact section-show">
+    <div class="container">
+        <div class="section-title">
+            <h2>Update</h2>
+        </div>
+        <form asp-action="UserUpdate" asp-area="CompanyManager" asp-controller="CompanyManagerHome" enctype="multipart/form-data" method="post" class="formDesign mt-4">
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="FirstName">First Name</label>
+                        <input asp-for="FirstName" type="text" class="form-control" placeholder="Your First Name" required="">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <label asp-for="LastName">Last Name</label>
+                        <input asp-for="LastName" type="text" class="form-control" placeholder="Your Last Name" required="">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="FirstName2">Middle Name</label>
+                        <input asp-for="FirstName2" type="text" class="form-control" placeholder="Your Middle Name">
+                        <span asp-validation-for="FirstName2" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <label asp-for="LastName2">Maiden Name</label>
+                        <input asp-for="LastName2" type="text" class="form-control" placeholder="Your Maiden Name">
+                        <span asp-validation-for="LastName2" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="TCIdentificationNumber">Identification Number</label>
+                        <input asp-for="TCIdentificationNumber" class="form-control form-control-md" />
+                        <span asp-validation-for="TCIdentificationNumber" class="text-danger"></span>
+                    </div>
+                    <div style="margin-top:20px;" class="col-md-6 form-group">
+                        <label>
+                            <input style="margin-top:15px;" type="radio" name="gender" value="Man">
+                            <span>Man</span>
+                        </label>  &nbsp; &nbsp; &nbsp;
+                        <label>
+                            <input style="margin-top:15px;" type="radio" name="gender" value="Woman">
+                            <span>Woman</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="Birthdate">Birth Date</label>
+                        <input asp-for="Birthdate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
+                        <span asp-validation-for="Birthdate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <label asp-for="BirthPlace">Birth Place</label>
+                        <input asp-for="BirthPlace" class="form-control form-control-md" />
+                        <span asp-validation-for="BirthPlace" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <select style="background-color:#FFFFFF14; color:white" class="optionColor form-select form-select-md" aria-label="Default select example" asp-for="JobID" asp-items='new SelectList(jobList, "ID", "JobName")'>
+                </select>
+                <span asp-validation-for="JobID" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <select style="background-color:#FFFFFF14; color:white" class="optionColor form-select form-select-md" aria-label="Default select example" asp-for="DepartmentID" asp-items='new SelectList(departmentList, "ID", "DepartmentName")'>
+                    <span asp-validation-for="DepartmentID" class="text-danger"></span>
+                </select>
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="StartDateOfWork">Start Date of Work</label>
+                        <input asp-for="StartDateOfWork" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
+                        <span asp-validation-for="StartDateOfWork.Date" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <label asp-for="DismissalDate">Dismissal Date</label>
+                        <input asp-for="DismissalDate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
+                        <span asp-validation-for="DismissalDate" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="PhoneNumber">Phone</label>
+                        <input type="text" class="form-control form-control-md" asp-for="PhoneNumber" maxlength="10" placeholder="(Please write after +90)" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group mt-3 mt-md-0">
+                        <label asp-for="Salary"></label>
+                        <input type="text" class="form-control form-control-md" asp-for="Salary" />
+                        <span asp-validation-for="Salary" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" placeholder="Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label asp-for="Photo">Choose Your Photo</label>
+                        <input asp-for="Photo" name="files" type="file" id="image-upload" accept=".png, .jpg, .jpeg" class="form-control form-control-md" />
+                    </div>
+                </div>
+            </div>
+            <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+            </div>
+            <div style="margin-left:1000px;" class="text-center">< <input class="btn btn-success" type="submit" value="Update" onclick="submitForm()"></></div>
+        </form>
     </div>
-</section>
-
-
+</section><!-- End Contact Section -->                  <!--CONTACT EKRANI            -->
 <script>
     function submitForm() {
         var form = document.getElementById('updateUserForm');
@@ -213,7 +265,7 @@
 
         var fileExtension = file.name.split('.').pop().toLowerCase();
         if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
-            alert("Invalid file path! Sadece .png, .jpg veya .jpeg uzantılı dosyaları seçin.");
+            alert("Geçersiz dosya uzantısı! Sadece .png, .jpg veya .jpeg uzantılı dosyaları seçin.");
             return;
         }
 
@@ -228,7 +280,7 @@
         xhr.onload = function () {
             if (xhr.status === 200) {
                 alert("Güncelleme işlemi başarıyla tamamlandı!");
-                window.location.href = '/CompanyManager/CompanyManagerHome/UserUpdate'; // UserUpdate sayfasına yönlendirme
+                window.location.href = '/CompanyManager/CompanyManagerHome/Index'; // Index sayfasına yönlendirme
             } else {
                 alert("Güncelleme işlemi sırasında bir hata oluştu.");
             }
@@ -236,38 +288,5 @@
         // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanır.
         xhr.send(formData);
     }
-
-    $(document).ready(function () {
-        $(".dateInput").on("change", function () { this.setAttribute("data-date", moment(this.value, "YYYY-MM-DD").format(this.getAttribute("data-date-format"))); }).trigger("change");
-    });
 </script>
 
-<style>
-    .dateInput {
-        position: relative;
-        width: 150px;
-        height: 20px;
-        color: white;
-    }
-
-        .dateInput:before {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            content: attr(data-date);
-            display: inline-block;
-            color: black;
-        }
-
-        .dateInput::-webkit-datetime-edit, input::-webkit-inner-spin-button, input::-webkit-clear-button {
-            display: none;
-        }
-
-        .dateInput::-webkit-calendar-picker-indicator {
-            position: absolute;
-            top: 3px;
-            right: 0;
-            color: black;
-            opacity: 1;
-        }
-</style>

@@ -31,9 +31,7 @@ namespace HR_Project.Entities.Entities
 
         public string FormattedDismissalDate { 
             get { return dismissalDate.HasValue ? dismissalDate.Value.ToString("dd/MM/yyyy") : string.Empty; } 
-        }
-
-
+        }     
         private DateTime? birthDate; 
         public DateTime? Birthdate
         {
@@ -57,7 +55,8 @@ namespace HR_Project.Entities.Entities
 
         public string? TCIdentificationNumber { get; set; }
 
-        
+        public bool? IsPasswordChange { get; set; } = false;
+
 
         //navigation properties
 

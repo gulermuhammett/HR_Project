@@ -1,186 +1,160 @@
 ﻿@using HR_Project.Entities.Entities;
 @model List<Advance>
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Areas/Employee/Views/Shared/_EmployeeLayout.cshtml";
+    Layout = "~/Areas/Employee/Views/Shared/_Layouttt.cshtml";
 }
-
-
-
-<section style="padding: 0;">
-    <div class="container-fluid">
-        <div class="row d-flex justify-content-center align-items-center">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Pending Advance Requests</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Confirmed Advance Requests</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Cancelled Advance Requests</button>
-                </li>
-
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-                    <div class="card">
-                        <div class="card-header">
-                        </div>
-                        <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
-                                <thead>
+<section id="portfolio" class="portfolio section-show">
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Pending Advance Requests</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Confirmed Advance Requests</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Cancelled Advance Requests</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div style="margin-top:-1px;" class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                <table id="bootstrap-data-table" class="table table-dark table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Request Date</th>
+                            <th scope="col">Employee</th>
+                            <th scope="col">Amount Currency</th>
+                            <th scope="col">Advance Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int rowCount = 1;
+                        }
+                        @if (Model is not null)
+                        {
+                            @foreach (var item in Model)
+                            {
+                                if (item.Status == HR_Project.Entities.Enums.Status.Pending)
+                                {
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Request Date</th>
-                                        <th scope="col">Employee</th>
-                                        <th scope="col">Amount Currency</th>
-                                        <th scope="col">Advance Type</th>
-                                        <th scope="col">Transactions</th> @*isteği silme durumu olursa*@
+                                        <th scope="row">@rowCount</th>
+                                        <td>@item.RequestDate</td>
+                                        <td>@item.User.FirstName @item.User.LastName</td>
+                                        <td>@item.Amount.ToString() @item.Currency </td>
+                                        <td>@item.Type</td>
+
+                                        <td class="bg-warning">Pending</td>
+                                        <td>
+                                            <input type="hidden" id="itemID" value="@item.ID" />
+
+                                            <a asp-area="Employee" asp-controller="EmployeeHome" asp-action="AdvanceDelete" asp-route-id="@item.ID" class="btn btn-sm btn-danger">Cancel</a>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @{
-                                        int rowCount = 1;
-                                    }
-                                    @if (Model is not null)
-                                    {
-                                        @foreach (var item in Model)
-                                        {
-
-                                            if (item.Status == HR_Project.Entities.Enums.Status.Pending)
-                                            {
-                                                <tr>
-                                                    <th scope="row">@rowCount</th>
-                                                    <td>@item.RequestDate</td>
-                                                    <td>@item.User.FirstName @item.User.LastName</td>
-                                                    <td>@item.Amount.ToString() @item.Currency </td>
-                                                    <td>@item.Type</td>
-
-                                                    <td class="bg-warning">Pending</td>
-                                                    <td>
-                                                        <input type="hidden" id="itemID" value="@item.ID" />
-
-                                                        @* <button class="btn btn-sm btn-warning btnDetail" value="@item.ID" data-toggle="modal" data-target="#exampleModalCenter">
-                                            Detay
-                                            </button>*@
-
-                                                        <a asp-area="Employee" asp-controller="EmployeeHome" asp-action="AdvanceDelete" asp-route-id="@item.ID" class="btn btn-sm btn-danger">Cancel</a>
-                                                    </td>
-                                                </tr>
-                                                rowCount++;
-                                            }
-                                        }
-                                    }
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                    <div class="card">
-                        <div class="card-header">
-                        </div>
-                        <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Request Date</th>
-                                        <th scope="col">Employee</th>
-                                        <th scope="col">Amount Currency</th>
-                                        <th scope="col">Advance Type</th>
-                                        <th scope="col">Transaction Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @{
-                                        int rowCount2 = 1;
-                                    }
-                                    @if (Model is not null)
-                                    {
-                                        @foreach (var item in Model)
-                                        {
-
-                                            if (item.Status == HR_Project.Entities.Enums.Status.Confirmed)
-                                            {
-                                                <tr>
-                                                    <th scope="row">@rowCount2</th>
-                                                    <td>@item.RequestDate</td>
-                                                    <td>@item.User.FirstName @item.User.LastName</td>
-                                                    <td>@item.Amount.ToString() @item.Currency </td>
-                                                    <td>@item.Type</td>
-
-                                                    <td class="bg-success">Confirmed</td>
-
-
-                                                    <td>@item.TransactionDate</td>
-                                                </tr>
-                                                rowCount2++;
-                                            }
-                                        }
-                                    }
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                    <div class="card">
-                        <div class="card-header">
-                        </div>
-                        <div class="card-body">
-                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Request Date</th>
-                                        <th scope="col">Employee</th>
-                                        <th scope="col">Amount Currency</th>
-                                        <th scope="col">Advance Type</th>
-                                        <th scope="col">Transaction Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @{
-                                        int rowCount3 = 1;
-                                    }
-                                    @if (Model is not null)
-                                    {
-                                        @foreach (var item in Model)
-                                        {
-
-                                            if (item.Status == HR_Project.Entities.Enums.Status.Canceled)
-                                            {
-                                                <tr>
-                                                    <th scope="row">@rowCount3</th>
-                                                    <td>@item.RequestDate</td>
-                                                    <td>@item.User.FirstName @item.User.LastName</td>
-                                                    <td>@item.Amount.ToString() @item.Currency </td>
-                                                    <td>@item.Type</td>
-
-                                                    <td class="bg-danger">Canceled</td>
-
-
-                                                    <td>@item.TransactionDate</td>
-                                                </tr>
-                                                rowCount3++;
-                                            }
-                                        }
-                                    }
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                                    rowCount++;
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
 
             </div>
-            <div style="background-color: white; text-align: right;">
-                <a asp-area="Employee" asp-controller="EmployeeHome" asp-action="AdvanceCreate" class="btn btn-secondary" style="background-color: white; color: green;">New Advance Request</a>
+            <div style="margin-top:-1px;" class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+
+                <table id="bootstrap-data-table" class="table table-dark table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Request Date</th>
+                            <th scope="col">Employee</th>
+                            <th scope="col">Amount Currency</th>
+                            <th scope="col">Advance Type</th>
+                            <th scope="col">Transaction Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int rowCount2 = 1;
+                        }
+                        @if (Model is not null)
+                        {
+                            @foreach (var item in Model)
+                            {
+
+                                if (item.Status == HR_Project.Entities.Enums.Status.Confirmed)
+                                {
+                                    <tr>
+                                        <th scope="row">@rowCount2</th>
+                                        <td>@item.RequestDate</td>
+                                        <td>@item.User.FirstName @item.User.LastName</td>
+                                        <td>@item.Amount.ToString() @item.Currency </td>
+                                        <td>@item.Type</td>
+
+                                        <td class="bg-success">Confirmed</td>
+
+
+                                        <td>@item.TransactionDate</td>
+                                    </tr>
+                                    rowCount2++;
+                                }
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
             </div>
+            <div style="margin-top:-1px;" class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+
+
+                <table id="bootstrap-data-table" class="table table-dark table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Request Date</th>
+                            <th scope="col">Employee</th>
+                            <th scope="col">Amount Currency</th>
+                            <th scope="col">Advance Type</th>
+                            <th scope="col">Transaction Date</th>
+                            <th scope="col">Canceled Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int rowCount3 = 1;
+                        }
+                        @if (Model is not null)
+                        {
+                            @foreach (var item in Model)
+                            {
+
+                                if (item.Status == HR_Project.Entities.Enums.Status.Canceled)
+                                {
+                                    <tr>
+                                        <th scope="row">@rowCount3</th>
+                                        <td>@item.RequestDate</td>
+                                        <td>@item.User.FirstName @item.User.LastName</td>
+                                        <td>@item.Amount.ToString() @item.Currency </td>
+                                        <td>@item.Type</td>
+
+                                        <td class="bg-danger">Canceled</td>
+
+
+                                        <td>@item.TransactionDate</td>
+                                    </tr>
+                                    rowCount3++;
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div text-align: right;">
+            <a asp-area="Employee" asp-controller="EmployeeHome" asp-action="AdvanceCreate" class="btn btn-secondary" style="background-color: white; color: green;">New Advance Request</a>
         </div>
     </div>
 </section>

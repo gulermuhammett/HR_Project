@@ -79,6 +79,10 @@ namespace HR_Project.UI
                 pattern: "{area:exists}/{controller=EmployeeHome}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
+                name: "areas3",
+                pattern: "{area:exists}/{controller=AdminHome}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 

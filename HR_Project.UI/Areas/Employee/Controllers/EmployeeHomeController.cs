@@ -20,7 +20,7 @@ namespace HR_Project.UI.Areas.Employee.Controllers
     [Authorize(Roles = "Employee")]
     public class EmployeeHomeController : Controller
     {
-        string baseURL = "https://mezaapi-v11.azurewebsites.net";
+        string baseURL = "https://localhost:7253";
         private readonly IWebHostEnvironment _environment;
         private readonly IGenericService<User> service;
         private readonly IMapper mapper;
@@ -31,6 +31,8 @@ namespace HR_Project.UI.Areas.Employee.Controllers
             this.service = service;
             this.mapper = mapper;
         }
+        
+
         public async Task<IActionResult> Index()
         {
             //var userClaimList = HttpContext.User.Claims.ToList();
@@ -45,6 +47,55 @@ namespace HR_Project.UI.Areas.Employee.Controllers
             }
             return View(user);
         }
+
+        public async Task<IActionResult> SummaryInformation()
+        {
+            User user = new User();
+            List<User> users = new List<User>();
+            HashSet<int> departments = new HashSet<int>();
+            HashSet<int> jobs = new HashSet<int>();
+            HashSet<int> advances = new HashSet<int>();
+            using (var httpClient = new HttpClient())
+            {
+                using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByIdInclude/{HttpContext.User.FindFirst("ID").Value}"))
+                {
+                    string apiResult = await answ.Content.ReadAsStringAsync();
+                    user = JsonConvert.DeserializeObject<List<User>>(apiResult)[0];
+                }
+                using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllUserInclude"))
+                {
+                    string apiResult = await answ.Content.ReadAsStringAsync();
+                    users = JsonConvert.DeserializeObject<List<User>>(apiResult);
+                }
+            }
+            foreach (var item in users)
+            {
+                if (user.DepartmentID != null)
+                {
+                    departments.Add((int)item.DepartmentID);
+                }
+                if (user.JobID != null)
+                {
+                    jobs.Add((int)item.JobID);
+                }
+                if (item.Advances.Where(x => x.Status == Status.Pending && x.UserID == Convert.ToInt32(HttpContext.User.FindFirst("ID").Value)).ToList().Count()>0)
+                {
+                    advances.Add(item.Advances.Where(x => x.Status == Status.Pending && x.UserID == Convert.ToInt32(HttpContext.User.FindFirst("ID").Value)).ToList().Count());
+                }
+                
+            }
+            ViewBag.UserCount = users.Count().ToString();
+            ViewBag.DepartmentCount = departments.Count().ToString();
+            ViewBag.JobCount = jobs.Count().ToString();
+            ViewBag.AdvancesCount = advances.Count().ToString();
+            return View(user);
+        }
+
+
+
+
+
+
 
         static List<Advance> advances = new List<Advance>();
         public async Task<IActionResult> AdvanceIndex()

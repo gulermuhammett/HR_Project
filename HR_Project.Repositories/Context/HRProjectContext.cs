@@ -18,7 +18,7 @@ namespace HR_Project.Repositories.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=tcp:scrumteam2.database.windows.net,1433;Initial Catalog=HrProjectDB2;Persist Security Info=False;User ID=scrumteam2;Password=AgjW.123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;");
+            optionsBuilder.UseSqlServer("Server=tcp:scrumteam2.database.windows.net,1433;Initial Catalog=HrProjectDB3;Persist Security Info=False;User ID=scrumteam2;Password=AgjW.123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;");
         }
 
         public DbSet<Company> Companies { get; set; }
@@ -57,7 +57,29 @@ namespace HR_Project.Repositories.Context
                 new Job { ID = 1, JobName = "Satış Müdürü", IsActive = true, DepartmentID = 1 }
             );
             modelBuilder.Entity<User>().HasData(
-                new User { ID = 1, FirstName = "Emre", LastName = "Karaüzüm", Password="123Abc.", Salary = 42000, Gender= Gender.Man, Role=Roles.CompanyManager, PhoneNumber = "5386656649", TCIdentificationNumber = "12345678912", JobID = 1, DepartmentID = 1, CompanyID = 1, IsActive = true, Address="Ankara Çankaya", Photo = "https://media.licdn.com/dms/image/D4D03AQFKCXDB3b5hSA/profile-displayphoto-shrink_800_800/0/1668897343508?e=2147483647&v=beta&t=FMAUQ8X7dS4I6dL_FgCuWxpxXiwq8hiEIJXeh9K9cEQ", BirthPlace = "Ankara", Birthdate = new DateTime(1991, 1, 1) }
+                new User
+                { ID = 1, FirstName = "Emre", LastName = "Karaüzüm", Password = "123Abc.", Salary = 42000, Gender = Gender.Man, Role = Roles.CompanyManager, PhoneNumber = "5386656649", TCIdentificationNumber = "12345678912", JobID = 1, DepartmentID = 1, CompanyID = 1, IsActive = true, Address = "Ankara Çankaya", Photo = "https://media.licdn.com/dms/image/D4D03AQFKCXDB3b5hSA/profile-displayphoto-shrink_800_800/0/1668897343508?e=2147483647&v=beta&t=FMAUQ8X7dS4I6dL_FgCuWxpxXiwq8hiEIJXeh9K9cEQ", BirthPlace = "Ankara", Birthdate = new DateTime(1991, 1, 1) },
+                new User
+                {
+                    ID = 101,
+                    FirstName = "Muhammet",
+                    LastName = "Güler",
+                    Password = "123Abc.",
+                    Salary = 42000,
+                    Gender = Gender.Man,
+                    Role = Roles.Admin,
+                    Email = "muhammet.guler@bilgeadam.com",
+                    PhoneNumber = "5386656649",
+                    TCIdentificationNumber = "12345678912",
+                    JobID = 1,
+                    DepartmentID = 1,
+                    CompanyID = 1,
+                    IsActive = true,
+                    Address = "İzmir",
+                    Photo = "https://media.licdn.com/dms/image/D4D03AQHDyrxhHyFbzw/profile-displayphoto-shrink_800_800/0/1685523959801?e=2147483647&v=beta&t=8SZPlG5BfMKyNQmqBIBbRJ2C45EYBsfAaJAf-Rc5oV4",
+                    BirthPlace = "İzmir",
+                    Birthdate = new DateTime(1991, 1, 1)
+                }
             );
         }
 

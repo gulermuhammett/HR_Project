@@ -43,8 +43,8 @@ namespace HR_Project.UI.Models.DTOs
         public string? BirthPlace { get; set; }                         //Doğum yeri
         
         public string? PhoneNumber { get; set; }
-        
-        
+
+        public Gender? Gender { get; set; }
         public string? Address { get; set; }
         public decimal? Salary { get; set; }   //maaş
         public string? Photo { get; set; }
@@ -77,6 +77,8 @@ namespace HR_Project.UI.Models.DTOs
         public Job? Job { get; set; }
         public int? DepartmentID { get; set; }
         public Department? Department { get; set; }
+        public int? CompanyID { get; set; }
+        public Company? Company { get; set; }
         
     }
 }

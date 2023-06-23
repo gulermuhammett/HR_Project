@@ -71,12 +71,48 @@ namespace HR_Project.Repositories.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CompanyTitle")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ContractFinishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ContractStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Logo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MersisNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NumberOfEmployees")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaxNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaxOffice")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("YearOfFoundation")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("ID");
 
@@ -204,6 +240,9 @@ namespace HR_Project.Repositories.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsPasswordChange")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("JobID")
                         .HasColumnType("int");
 
@@ -257,6 +296,7 @@ namespace HR_Project.Repositories.Migrations
                             FirstName = "Emre",
                             Gender = 1,
                             IsActive = true,
+                            IsPasswordChange = false,
                             JobID = 1,
                             LastName = "Karaüzüm",
                             Password = "123Abc.",
@@ -264,7 +304,30 @@ namespace HR_Project.Repositories.Migrations
                             Photo = "https://media.licdn.com/dms/image/D4D03AQFKCXDB3b5hSA/profile-displayphoto-shrink_800_800/0/1668897343508?e=2147483647&v=beta&t=FMAUQ8X7dS4I6dL_FgCuWxpxXiwq8hiEIJXeh9K9cEQ",
                             Role = 2,
                             Salary = 42000m,
-                            StartDateOfWork = new DateTime(2023, 6, 15, 0, 0, 0, 0, DateTimeKind.Local),
+                            StartDateOfWork = new DateTime(2023, 6, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            TCIdentificationNumber = "12345678912"
+                        },
+                        new
+                        {
+                            ID = 101,
+                            Address = "İzmir",
+                            BirthPlace = "İzmir",
+                            Birthdate = new DateTime(1991, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CompanyID = 1,
+                            DepartmentID = 1,
+                            Email = "muhammet.guler@bilgeadam.com",
+                            FirstName = "Muhammet",
+                            Gender = 1,
+                            IsActive = true,
+                            IsPasswordChange = false,
+                            JobID = 1,
+                            LastName = "Güler",
+                            Password = "123Abc.",
+                            PhoneNumber = "5386656649",
+                            Photo = "https://media.licdn.com/dms/image/D4D03AQHDyrxhHyFbzw/profile-displayphoto-shrink_800_800/0/1685523959801?e=2147483647&v=beta&t=8SZPlG5BfMKyNQmqBIBbRJ2C45EYBsfAaJAf-Rc5oV4",
+                            Role = 1,
+                            Salary = 42000m,
+                            StartDateOfWork = new DateTime(2023, 6, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             TCIdentificationNumber = "12345678912"
                         });
                 });

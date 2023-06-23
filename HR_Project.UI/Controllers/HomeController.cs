@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net;
 using System.Security.Claims;
+using System.Text;
 
 namespace HR_Project.UI.Controllers
 {
@@ -19,13 +20,13 @@ namespace HR_Project.UI.Controllers
         {
             _logger = logger;
             httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("https://mezaapi-v11.azurewebsites.net");
+            httpClient.BaseAddress = new Uri("https://localhost:7253");
         }
         public IActionResult Index()
         {
             return View();
         }
-        string url = "https://mezaapi-v11.azurewebsites.net";
+        string url = "https://localhost:7253";
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
@@ -49,8 +50,7 @@ namespace HR_Project.UI.Controllers
             using (var httpClient = new HttpClient())
             {
                 using (var cevap = await httpClient.GetAsync($"{url}/api/User/Login?email={loginDTO.Email}&password={loginDTO.Password}"))
-                {
-                    
+                {                    
                     if (cevap.IsSuccessStatusCode)
                     {
                         string apiCevap = await cevap.Content.ReadAsStringAsync();
@@ -88,6 +88,8 @@ namespace HR_Project.UI.Controllers
                     new Claim("Job", user.Job.JobName),
                     new Claim("CompanyID", user.Company.ID.ToString()),
                     new Claim("Photo", user.Photo),
+                    new Claim("Department", user.Department.DepartmentName),
+                    new Claim("IsActivePassword", user.IsPasswordChange.ToString()),
                     new Claim(ClaimTypes.Email, loggedUser.Email),
                     new Claim(ClaimTypes.Role, loggedUser.Role.ToString())
                 };
@@ -99,25 +101,73 @@ namespace HR_Project.UI.Controllers
             {
                 return View(loginDTO);
             }
-            switch (loggedUser.Role)
+            if (loggedUser.IsPasswordChange == false)
             {
-                case Roles.Admin:
-                    return RedirectToAction("Index", "Home", new { Area = "Admin" });
+                return RedirectToAction("PasswordChange", "Home");
 
-                case Roles.CompanyManager:                    
-                    return RedirectToAction("Index", "CompanyManagerHome", new { Area = "CompanyManager" });
+            }
+            else
+            {
+                switch (loggedUser.Role)
+                {
+                    case Roles.Admin:
+                        return RedirectToAction("Index", "AdminHome", new { Area = "Admin" });
 
 
-                case Roles.Employee:
-                    return RedirectToAction("Index", "EmployeeHome", new { Area = "Employee" });
-                default:
-                    return View(loginDTO);
+
+                    case Roles.CompanyManager:
+                        return RedirectToAction("Index", "CompanyManagerHome", new { Area = "CompanyManager" });
+
+
+
+
+                    case Roles.Employee:
+                        return RedirectToAction("Index", "EmployeeHome", new { Area = "Employee" });
+                    default:
+                        return View(loginDTO);
+                }
+            }           
+        }
+        static User updatedUser;
+        [HttpGet]
+        public async Task<IActionResult> PasswordChange()
+        {            
+            updatedUser = await GetUserFromAPI();
+            return View(updatedUser);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PasswordChange(User user)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                var updatedUser = await GetUserFromAPI(); // API'den güncellenen kullanıcıyı al
+                updatedUser.Password = user.Password; // Kullanıcının girdiği yeni parolayı atama
+                updatedUser.IsPasswordChange = true;
+                StringContent content = new StringContent(JsonConvert.SerializeObject(updatedUser), Encoding.UTF8, "application/json");
+                using (var response = await httpClient.PutAsync($"{url}/api/User/UpdateUser/{updatedUser.ID}", content))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        private async Task<User> GetUserFromAPI()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync($"{url}/api/User/GetUserByIdInclude/{HttpContext.User.FindFirst("ID").Value}"))
+                {
+                    string apiResult = await response.Content.ReadAsStringAsync();
+                    var user = JsonConvert.DeserializeObject<List<User>>(apiResult)[0];
+                    return user;
+                }
             }
         }
-        
+
         public async Task<IActionResult> Logout()
         {
-
             await HttpContext.SignOutAsync();            
             return RedirectToAction("Index", "Home");
         }
