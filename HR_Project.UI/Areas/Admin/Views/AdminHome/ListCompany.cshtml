@@ -83,7 +83,7 @@
 
     <!-- CSS -->
     <!-- JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <style>
     .pagination {
@@ -132,13 +132,17 @@
     .les {
         height: 15px;
     }
+    /*.normalTd{
+        text-align: center;
+        
+    }*/
 </style>
 
 
 <section id="resume" class="resume section-show">
     <div class="container">
         <div class="section-title">
-            <h2>List Employee</h2>
+            <h2>List Company</h2>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -167,7 +171,7 @@
                                 {
                                     <tr>
                                         <td><p class="pclass">@counter</p></td>
-                                        <td class="normalTd"><img src="@item.Logo" alt="Profile" class="rounded-circle" /></td>
+                                        <td style="text-align: center;" class="normalTd"><img src="@item.Logo" alt="Profile" class="rounded-circle" /></td>
                                         <td><p class="pclass">@item.CompanyName</p></td>
                                         <td><p class="pclass">@item.Email</p></td>
                                         <td><p class="pclass">@item.Address</p></td>
@@ -177,7 +181,13 @@
                                         <td><p class="pclass">@item.ContractStartDate</p></td>
                                         <td><p class="pclass">@item.ContractFinishDate</p></td>
                                         <td><p class="pclass">@item.NumberOfEmployees</p></td>
-                                        <td><a data-toggle="modal" data-target="@("#detailModal" + counter.ToString())" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a><br /><a asp-action="UpdateCompany" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-primary py-0">Update</a><br /><a asp-action="CompanyRemove" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-secondary py-0">Remove</a></td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="@("#detailModal" + counter.ToString())" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a>
+                                            <br />
+                                            <a asp-action="UpdateCompany" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-primary py-0">Update</a>
+                                            <br />
+                                            <a asp-action="CompanyRemove" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-secondary py-0">Remove</a>
+                                        </td>
                                     </tr>
                                 }
                                 <div class="modal fade" tabindex="-1" role="dialog" id="@("detailModal" + counter.ToString())">
@@ -314,14 +324,7 @@
     </div>
 </section><!-- End Resume Section -->                 <!--RESUME EKRANI            -->
 
-<script>
-    $(document).ready(function () {
-        $('#myTable').DataTable({
-            pageLength: 6,
-            lengthMenu: [[6, 10, 20, -1], [6, 10, 20, 'Todos']]
-        });
-    });
-</script>
+
 
 <!-- Vendor JS Files -->
 <script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>

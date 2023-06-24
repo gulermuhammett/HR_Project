@@ -131,7 +131,7 @@
         <div class="section-title">
             <h2>Registration</h2>
         </div>
-        <form asp-action="AddUser" asp-area="CompanyManager" asp-controller="CompanyManagerHome" enctype="multipart/form-data" method="post" class="formDesign mt-4">
+        <form asp-action="AddCompanyManager" asp-area="Admin" asp-controller="AdminHome" enctype="multipart/form-data" method="post" class="formDesign mt-4">
             <div class="form-group mt-3">
                 <div class="row">
                     <div class="col-md-6 form-group">
@@ -242,6 +242,11 @@
                 <input asp-for="Address" class="form-control" placeholder="Address" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <select asp-for="City" asp-items="@ViewBag.CityList" class="form-select"></select>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
             <div class="form-group mt-3">
                 <div class="row">
                     <div class="col-md-6 form-group">
@@ -277,23 +282,23 @@
             return;
         }
 
-        // FormData nesnesini oluşturarak form verilerini alın
+        // FormData nesnesini oluşturarak form verilerini alındı
         var formData = new FormData(form);
-        // Dosyayı formData'ya ekleyin
+        // Dosyayı formData'ya eklendi
         formData.append('files', file);
 
-        // FormData'yı doğru bir şekilde göndermek için XMLHttpRequest kullanın
+        // FormData'yı doğru bir şekilde göndermek için XMLHttpRequest kullanıldı
         var xhr = new XMLHttpRequest();
         xhr.open('POST', form.action);
         xhr.onload = function () {
             if (xhr.status === 200) {
                 alert("Güncelleme işlemi başarıyla tamamlandı!");
-                window.location.href = '/CompanyManager/CompanyManagerHome/AddUser'; // Index sayfasına yönlendirme
+                window.location.href = '/Admin/AdminHome/AddCompanyManager'; 
             } else {
                 alert("Güncelleme işlemi sırasında bir hata oluştu.");
             }
         };
-        // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanır.
+        // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanıyor zaten
         xhr.send(formData);
     }
 </script>

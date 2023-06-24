@@ -20,7 +20,7 @@ namespace HR_Project.UI.Areas.Employee.Controllers
     [Authorize(Roles = "Employee")]
     public class EmployeeHomeController : Controller
     {
-        string baseURL = "https://localhost:7253";
+        string baseURL = "https://mezaapi-v11.azurewebsites.net";
         private readonly IWebHostEnvironment _environment;
         private readonly IGenericService<User> service;
         private readonly IMapper mapper;

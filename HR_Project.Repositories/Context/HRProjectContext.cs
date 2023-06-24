@@ -58,7 +58,7 @@ namespace HR_Project.Repositories.Context
             );
             modelBuilder.Entity<User>().HasData(
                 new User
-                { ID = 1, FirstName = "Emre", LastName = "Karaüzüm", Password = "123Abc.", Salary = 42000, Gender = Gender.Man, Role = Roles.CompanyManager, PhoneNumber = "5386656649", TCIdentificationNumber = "12345678912", JobID = 1, DepartmentID = 1, CompanyID = 1, IsActive = true, Address = "Ankara Çankaya", Photo = "https://media.licdn.com/dms/image/D4D03AQFKCXDB3b5hSA/profile-displayphoto-shrink_800_800/0/1668897343508?e=2147483647&v=beta&t=FMAUQ8X7dS4I6dL_FgCuWxpxXiwq8hiEIJXeh9K9cEQ", BirthPlace = "Ankara", Birthdate = new DateTime(1991, 1, 1) },
+                { ID = 1, FirstName = "Emre", LastName = "Karaüzüm", Password = "123Abc.", Salary = 42000, Gender = Gender.Man, Role = Roles.CompanyManager, PhoneNumber = "5386656649", TCIdentificationNumber = "12345678912", JobID = 1, DepartmentID = 1, CompanyID = 1, IsActive = true, Address = "Ankara Çankaya", Photo = "https://media.licdn.com/dms/image/D4D03AQFKCXDB3b5hSA/profile-displayphoto-shrink_800_800/0/1668897343508?e=2147483647&v=beta&t=FMAUQ8X7dS4I6dL_FgCuWxpxXiwq8hiEIJXeh9K9cEQ", BirthPlace = "Ankara", Birthdate = new DateTime(1991, 1, 1), City=City.ANKARA },
                 new User
                 {
                     ID = 101,
@@ -67,6 +67,7 @@ namespace HR_Project.Repositories.Context
                     Password = "123Abc.",
                     Salary = 42000,
                     Gender = Gender.Man,
+                    City = City.İZMİR,
                     Role = Roles.Admin,
                     Email = "muhammet.guler@bilgeadam.com",
                     PhoneNumber = "5386656649",

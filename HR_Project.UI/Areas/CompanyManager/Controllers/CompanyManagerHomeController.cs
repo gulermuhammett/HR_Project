@@ -24,7 +24,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
     [Authorize(Roles = "CompanyManager")]
     public class CompanyManagerHomeController : Controller
     {
-        string baseURL = "https://localhost:7253";
+        string baseURL = "https://mezaapi-v11.azurewebsites.net";
         private readonly IWebHostEnvironment _environment;
         private readonly IGenericService<User> service;
         private readonly IMapper mapper;
@@ -107,6 +107,15 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
         {
             ViewBag.GenderList = Enum.GetValues(typeof(Gender))
                          .Cast<Gender>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+            departments = new();
+            ViewBag.CityList = Enum.GetValues(typeof(City))
+                         .Cast<City>()
                          .Select(g => new SelectListItem
                          {
                              Value = g.ToString(),

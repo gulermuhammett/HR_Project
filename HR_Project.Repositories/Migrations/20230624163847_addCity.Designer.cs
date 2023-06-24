@@ -4,6 +4,7 @@ using HR_Project.Repositories.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR_Project.Repositories.Migrations
 {
     [DbContext(typeof(HRProjectContext))]
-    partial class HRProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20230624163847_addCity")]
+    partial class addCity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,9 +217,6 @@ namespace HR_Project.Repositories.Migrations
                     b.Property<DateTime?>("Birthdate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("City")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CompanyID")
                         .HasColumnType("int");
 
@@ -294,7 +293,6 @@ namespace HR_Project.Repositories.Migrations
                             Address = "Ankara Çankaya",
                             BirthPlace = "Ankara",
                             Birthdate = new DateTime(1991, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            City = 7,
                             CompanyID = 1,
                             DepartmentID = 1,
                             FirstName = "Emre",
@@ -317,7 +315,6 @@ namespace HR_Project.Repositories.Migrations
                             Address = "İzmir",
                             BirthPlace = "İzmir",
                             Birthdate = new DateTime(1991, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            City = 41,
                             CompanyID = 1,
                             DepartmentID = 1,
                             Email = "muhammet.guler@bilgeadam.com",

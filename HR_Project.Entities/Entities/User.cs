@@ -49,6 +49,7 @@ namespace HR_Project.Entities.Entities
         public string? PhoneNumber { get ; set; }
         public Gender? Gender { get; set; }
         public Roles? Role { get; set; }
+        public City? City { get; set; } = Enums.City.İSTANBUL;
         public string? Address { get; set; }
         public decimal? Salary { get; set; }   //maaş
         public string? Photo { get; set; }

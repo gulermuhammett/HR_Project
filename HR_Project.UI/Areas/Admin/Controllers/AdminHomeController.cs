@@ -26,7 +26,7 @@ namespace HR_Project.UI.Areas.Admin.Controllers
             this.service = service;
             this.mapper = mapper;
         }
-        string baseURL = "https://localhost:7253";
+        string baseURL = "https://mezaapi-v11.azurewebsites.net";
         private readonly IWebHostEnvironment environment;
         private readonly IGenericService<User> service;
         private readonly IMapper mapper;
