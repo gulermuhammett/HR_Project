@@ -20,13 +20,13 @@ namespace HR_Project.UI.Controllers
         {
             _logger = logger;
             httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("https://mezaapi-v11.azurewebsites.net");
+            httpClient.BaseAddress = new Uri("https://localhost:7253");
         }
         public IActionResult Index()
         {
             return View();
         }
-        string url = "https://mezaapi-v11.azurewebsites.net";
+        string url = "https://localhost:7253";
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
         {

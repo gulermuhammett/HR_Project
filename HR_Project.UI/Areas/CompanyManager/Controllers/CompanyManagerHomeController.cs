@@ -24,7 +24,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
     [Authorize(Roles = "CompanyManager")]
     public class CompanyManagerHomeController : Controller
     {
-        string baseURL = "https://mezaapi-v11.azurewebsites.net";
+        string baseURL = "https://localhost:7253";
         private readonly IWebHostEnvironment _environment;
         private readonly IGenericService<User> service;
         private readonly IMapper mapper;
@@ -168,6 +168,14 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                              Text = g.ToString()
                          })
                          .ToList();
+                ViewBag.CityList = Enum.GetValues(typeof(City))
+                         .Cast<City>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
                 departments = new();
                 using (var httpClient = new HttpClient())
                 {
@@ -195,6 +203,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 ViewBag.AddUserDTO = userDTo;
                 ViewBag.jobList = jobs;
                 ViewBag.departmentList = departments;
+
                 return View("AddUser");
             }
             user.Role = Roles.Employee;

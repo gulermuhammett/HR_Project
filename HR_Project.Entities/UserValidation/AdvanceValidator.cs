@@ -25,7 +25,7 @@ namespace HR_Project.Entities.UserValidation
             
         //decimal? UserSalary(int id)
         //{
-        //    string baseURL = "https://mezaapi-v11.azurewebsites.net";
+        //    string baseURL = "https://mezaapi-v12.azurewebsites.net";
         //    User users = new();
         //    using (var httpClient = new HttpClient())
         //    {

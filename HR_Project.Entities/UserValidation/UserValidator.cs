@@ -30,7 +30,7 @@ namespace HR_Project.Entities.UserValidator
 
         private bool BeUniqueIdentification(string identification)
         {
-            string baseURL = "https://mezaapi-v11.azurewebsites.net";
+            string baseURL = "https://localhost:7253";
             List<User> users = new List<User>();
             using (var httpClient = new HttpClient())
             {

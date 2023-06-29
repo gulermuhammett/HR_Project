@@ -4,7 +4,7 @@
   "parameters": {
     "resourceGroupName": {
       "type": "string",
-      "defaultValue": "mezaapi-v11",
+      "defaultValue": "MezaHumanResource",
       "metadata": {
         "_parameterType": "resourceGroup",
         "description": "Name of the resource group for the resource. It is recommended to put resources under same resource group for better tracking."
@@ -49,17 +49,17 @@
           "contentVersion": "1.0.0.0",
           "resources": [
             {
-              "name": "mezaapi-v11",
+              "name": "HRProjectAPIapii",
               "type": "Microsoft.ApiManagement/service",
               "location": "[parameters('resourceLocation')]",
               "properties": {
-                "publisherEmail": "muhammettguler@outlook.com",
+                "publisherEmail": "gulermuhammett@gmail.com",
                 "publisherName": "Muhammet Güler",
                 "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
                 "hostnameConfigurations": [
                   {
                     "type": "Proxy",
-                    "hostName": "mezaapi-v11.azure-api.net",
+                    "hostName": "hrprojectapiapii.azure-api.net",
                     "encodedCertificate": null,
                     "keyVaultId": null,
                     "certificatePassword": null,
@@ -95,7 +95,7 @@
             },
             {
               "type": "Microsoft.ApiManagement/service/apis",
-              "name": "mezaapi-v11/HRProjectAPI",
+              "name": "HRProjectAPIapii/HRProjectAPI",
               "properties": {
                 "displayName": "HRProjectAPI",
                 "apiRevision": "1",
@@ -118,7 +118,7 @@
               },
               "apiVersion": "2019-12-01",
               "dependsOn": [
-                "mezaapi-v11"
+                "HRProjectAPIapii"
               ]
             }
           ]
