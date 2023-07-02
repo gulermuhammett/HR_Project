@@ -22,7 +22,6 @@ namespace HR_Project.Entities.UserValidation
             RuleFor(x => x.TaxOffice).NotEmpty().WithMessage("Tax Office can not be empty !");
             RuleFor(x => x.YearOfFoundation).NotEmpty().WithMessage("Year Of Foundation can not be empty !");
             RuleFor(x => x.NumberOfEmployees).NotEmpty().WithMessage("Number Of Employees can not be empty !");
-            RuleFor(x => x.Logo).NotEmpty().WithMessage("Tax Office can not be empty !");
             RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("Logo can not be empty !");
             RuleFor(x => x.Address).NotEmpty().WithMessage("Address can not be empty !").MinimumLength(3).WithMessage("Address must be at least 3 character").MaximumLength(100).WithMessage("Address must be max 100 character");
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email can not be empty !");

@@ -130,9 +130,12 @@
         <div class="section-title">
             <h2>Update</h2>
         </div>
-        <form asp-action="UserUpdate" asp-area="CompanyManager" asp-controller="CompanyManagerHome" enctype="multipart/form-data" method="post" class="formDesign mt-4">
+
+        <form asp-action="CompanyManagerUpdate" asp-area="Admin" asp-controller="AdminHome" enctype="multipart/form-data" method="post" class="formDesign mt-4">
+
             <div class="form-group mt-3">
                 <div class="row">
+
                     <div class="col-md-6 form-group">
                         <label asp-for="FirstName">First Name</label>
                         <input asp-for="FirstName" type="text" class="form-control" placeholder="Your First Name" required="">
@@ -160,12 +163,14 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <input type="hidden" asp-for="ID" />
+            </div>
             <div class="form-group mt-3">
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label asp-for="TCIdentificationNumber">Identification Number</label>
                         <input asp-for="TCIdentificationNumber" class="form-control form-control-md" />
-                        <span asp-validation-for="TCIdentificationNumber" class="text-danger"></span>
                     </div>
                     <div style="margin-top:20px;" class="col-md-6 form-group">
                         <label>
@@ -203,6 +208,7 @@
                     <span asp-validation-for="DepartmentID" class="text-danger"></span>
                 </select>
             </div>
+
             <div class="form-group mt-3">
                 <select style="background-color:#FFFFFF14; color:white" class="optionColor form-select form-select-md" aria-label="Default select example" asp-for="CompanyID" asp-items='new SelectList(companyList, "ID", "CompanyName")'>
                     <span asp-validation-for="CompanyID" class="text-danger"></span>
@@ -241,12 +247,27 @@
                 <input asp-for="Address" class="form-control" placeholder="Address" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <select style="background-color:#FFFFFF14; color:white" class="optionColor form-select form-select-md" asp-for="City" asp-items="@ViewBag.CityList" class="form-select"></select>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
             <div class="form-group mt-3">
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label asp-for="Photo">Choose Your Photo</label>
                         <input asp-for="Photo" name="files" type="file" id="image-upload" accept=".png, .jpg, .jpeg" class="form-control form-control-md" />
                     </div>
+                    @if (ViewBag.PhotoMessage != null)
+                    {
+                        <div>
+                            <span>Hata</span>
+
+                            <span>@ViewBag.PhotoMessage</span>
+
+
+                        </div>
+                    }
                 </div>
             </div>
             <div class="my-3">
@@ -254,79 +275,14 @@
                 <div class="error-message"></div>
                 <div class="sent-message">Your message has been sent. Thank you!</div>
             </div>
-            <div style="margin-left:1000px;" class="text-center">< <input class="btn btn-success" type="submit" value="Update" onclick="submitForm()"></></div>
+            <div style="margin-left:1000px;" class="text-center"> 
+                <input class="btn btn-success" type="submit" value="Update" >
+                </div>
+
         </form>
     </div>
 </section><!-- End Contact Section -->                  <!--CONTACT EKRANI            -->
 
 
 
-<script>
-    function submitForm() {
-        var form = document.getElementById('updateUserForm');
 
-        var fileInput = document.getElementById('image-upload');
-        var file = fileInput.files[0];
-        var fileSize = file.size;
-        var maxSizeInBytes = 4 * 1024 * 1024; // Maksimum 4MB (4 * 1024 * 1024 byte)
-        if (fileSize > maxSizeInBytes) {
-            alert("Dosya boyutu çok büyük! Lütfen maksimum 4MB boyutunda bir dosya seçin.");
-            return;
-        }
-
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
-            alert("Geçersiz dosya uzantısı! Sadece .png, .jpg veya .jpeg uzantılı dosyaları seçin.");
-            return;
-        }
-
-        // FormData nesnesini oluşturarak form verilerini alın
-        var formData = new FormData(form);
-        // Dosyayı formData'ya ekleyin
-        formData.append('files', file);
-
-        // FormData'yı doğru bir şekilde göndermek için XMLHttpRequest kullanın
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', form.action);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                alert("Güncelleme işlemi başarıyla tamamlandı!");
-                window.location.href = '/CompanyManager/CompanyManagerHome/Index'; // Index sayfasına yönlendirme
-            } else {
-                alert("Güncelleme işlemi sırasında bir hata oluştu.");
-            }
-        };
-        // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanır.
-        xhr.send(formData);
-    }
-</script>
-
-@*<style>
-    .dateInput {
-        position: relative;
-        width: 150px;
-        height: 20px;
-        color: white;
-    }
-
-        .dateInput:before {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            content: attr(data-date);
-            display: inline-block;
-            color: black;
-        }
-
-        .dateInput::-webkit-datetime-edit, input::-webkit-inner-spin-button, input::-webkit-clear-button {
-            display: none;
-        }
-
-        .dateInput::-webkit-calendar-picker-indicator {
-            position: absolute;
-            top: 3px;
-            right: 0;
-            color: black;
-            opacity: 1;
-        }
-</style>*@

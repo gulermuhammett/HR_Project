@@ -78,10 +78,15 @@
 <html lang="en">
 <head>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet" type="text/css">
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="css/style.css">
-
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- CSS -->
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -135,7 +140,40 @@
             height: 15px;
         }
     </style>
-    
+    <style>
+        /* Modal Background */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1050;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal Container */
+        .modal-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #212529;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        /* Modal Close Button */
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
     <section id="resume" class="resume section-show">
         <div class="container">
             <div class="section-title">
@@ -184,157 +222,95 @@
                                             <td><p class="pclass">@item.StartDateOfWork.ToShortDateString()</p></td>
                                             <td><p class="pclass">@item.Job.JobName</p></td>
                                             <td><p class="pclass">@item.Department.DepartmentName</p></td>
-                                            <td><a data-toggle="modal" data-target="@("#detailModal" + counter.ToString())" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a><br /><a asp-action="CompanyManagerUpdate" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-primary py-0">Update</a><br /><a asp-action="CompanyManagerRemove" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-secondary py-0">Remove</a></td>
+                                            <td>
+                                                <a data-toggle="modal" data-target="@("#detailModal" + counter.ToString())" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a>
+                                                <br />
+                                                <a asp-action="CompanyManagerUpdate" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-primary py-0">Update</a>
+                                                <br />
+                                                <a asp-action="CompanyManagerRemove" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-secondary py-0">Remove</a>
+                                            </td>
                                         </tr>
                                     }
 
-                                    <div class="modal fade" tabindex="-1" role="dialog" id="@("detailModal" + counter.ToString())">
+                                    <div class="modal" tabindex="-1" role="dialog" id="@("detailModal" + counter.ToString())">
                                         <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Employee Detail</h4>
+                                        <div style="background-color:#212529" class="modal-content">
+                                            <div style="background-color:#212529" class="modal-body">
+                                                <div style="flex; align-items:center; margin-left:308.5px;">
+                                                    <img src="@item.Photo" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div style="flex; align-items:center; margin-left:308.5px; ">
-                                                        <img src="@item.Photo" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
-                                                    </div>
-                                                    <div class="card mb-4">
-                                                        <div class="card-body" style="margin-top:20px; height:400px;">
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">First Name</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.FirstName @item.FirstName2</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Last Name</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.LastName @item.LastName2</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Birthdate</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.FormattedBirthdate</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Birth Place</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.BirthPlace</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Email</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.Email</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Phone</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.PhoneNumber</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Address</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.Address</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Job</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.Job.JobName</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Company Name</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.Company.CompanyName</p>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Department</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.Department.DepartmentName</p>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="row modalHeight">
-                                                                <div class="col-sm-3">
-                                                                    <p class="mb-0">Start Date Of Work</p>
-                                                                </div>
-                                                                <div class="col-sm-9">
-                                                                    <p class="text-muted mb-0">@item.StartDateOfWork.ToShortDateString()</p>
-                                                                </div>
-                                                            </div>
-                                                            @if (item.IsActive)@*Projenin devamında aktiflik durumuna göre çıkış tarihi gösterile bilir şu an 1 kullanıcı var oda aktif olduğu için her türlü görünecek*@
-                                                            {
-                                                                <div class="row modalHeight">
-                                                                    <div class="col-sm-3">
-                                                                        <p class="mb-0">Dismissal Date</p>
-                                                                    </div>
-                                                                    <div class="col-sm-9">
-
-                                                                        <p class="text-muted mb-0">Working</p>
-
-                                                                    </div>
-                                                                </div>
-                                                            }
-                                                            else
-                                                            {
-                                                                <div class="row modalHeight">
-                                                                    <div class="col-sm-3">
-                                                                        <p class="mb-0">Dismissal Date</p>
-                                                                    </div>
-                                                                    <div class="col-sm-9">
-
-                                                                        <p class="text-muted mb-0">@item.DismissalDate</p>
-
-                                                                    </div>
-                                                                </div>
-                                                            }
-
-                                                        </div>
-                                                    </div>
-                                                    @*MODAL BODYSİ BURAYA  /////////////////////////////////////////////////////////////////*@
+                                                <div style="background-color:#212529; margin-top:30px;" class="card mb-4">
+                                                    <table style="border:hidden;" class="table table-dark">
+                                                        <thead>
+                                                            <tr>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>First Name :</td>
+                                                                <td><p>@item.FirstName</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Middle Name :</td>
+                                                                <td><p>@item.FirstName2</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Last Name :</td>
+                                                                <td><p>@item.LastName</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Maiden Name :</td>
+                                                                <td><p>@item.LastName2</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Birth Date :</td>
+                                                                <td><p type="date" data-date="" data-date-format="DD MMMM YYYY">@item.FormattedBirthdate</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Birth Place :</td>
+                                                                <td><p>@item.BirthPlace</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Email :</td>
+                                                                <td><p>@item.Email</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Phone :</td>
+                                                                <td><p>@string.Format("{0:0(###) ###-####}", double.Parse(item.PhoneNumber))</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Address :</td>
+                                                                <td><p>@item.Address</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Job :</td>
+                                                                <td><p>@item.Job.JobName</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Company Name :</td>
+                                                                <td><p>@item.Company.CompanyName</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Department :</td>
+                                                                <td><p>@item.Department.DepartmentName</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Start Date Of Work :</td>
+                                                                <td><p style="color:white" type="text" data-date="" data-date-format="DD MMMM YYYY">@item.StartDateOfWork.ToShortDateString()</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Dismissal Date :</td>
+                                                                <td><p style="color:white" type="text" data-date="" data-date-format="DD MMMM YYYY">@item.FormattedDismissalDate</p></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div><!-- /.modal-content -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                            </div>
                                         </div><!-- /.modal-dialog -->
+                                        </div>
                                     </div>
 
                                     <!-- /.modal -->

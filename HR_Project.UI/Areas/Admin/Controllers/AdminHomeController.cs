@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.ComponentModel.Design;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -127,6 +128,20 @@ namespace HR_Project.UI.Areas.Admin.Controllers
         public async Task<IActionResult> AddCompany(Company company, List<IFormFile> files)
         {
             string returnedMessaage = Upload.ImageUpload(files, environment, out bool imgresult);
+
+            if (!ModelState.IsValid || (imgresult == false && returnedMessaage != "Dosya seçilmedi"))
+            {
+                ViewBag.TitleList = Enum.GetValues(typeof(CompanyTitle))
+             .Cast<CompanyTitle>()
+             .Select(g => new SelectListItem
+             {
+                 Value = g.ToString(),
+                 Text = enumDisplayNames.ContainsKey(g) ? enumDisplayNames[g] : g.ToString()
+             })
+             .ToList();
+                return View("AddCompany");
+            }
+
             company.IsActive = true;
             if (imgresult)
             {
@@ -152,7 +167,7 @@ namespace HR_Project.UI.Areas.Admin.Controllers
         {
 
             departments = new List<Department>();
-            jobs = new List<Job>();           
+            jobs = new List<Job>();
 
             using (var httpClient = new HttpClient())
             {
@@ -273,45 +288,81 @@ namespace HR_Project.UI.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateCompany(int id)
         {
-            var viewModel = new UpdateCompanyVM();
+            var company = new Company();
 
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync($"{baseURL}/api/Company/GetCompanyByID/{id}"))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
-                    viewModel.OriginalCompany = JsonConvert.DeserializeObject<Company>(apiResponse);
+                    company = JsonConvert.DeserializeObject<Company>(apiResponse);
                 }
             }
 
-            viewModel.TitleList = Enum.GetValues(typeof(CompanyTitle))
-                .Cast<CompanyTitle>()
-                .Select(g => new SelectListItem
-                {
-                    Value = g.ToString(),
-                    Text = enumDisplayNames.ContainsKey(g) ? enumDisplayNames[g] : g.ToString()
-                })
-                .ToList();
-            viewModel.LogoPath = viewModel.OriginalCompany.Logo;
+            ViewBag.TitleList = Enum.GetValues(typeof(CompanyTitle))
+                        .Cast<CompanyTitle>()
+                        .Select(g => new SelectListItem
+                        {
+                            Value = g.ToString(),
+                            Text = g.ToString()
+                        })
+                        .ToList();
 
-            return View(viewModel);
+
+            return View(company);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCompany(UpdateCompanyVM viewModel, List<IFormFile> files)
+        public async Task<IActionResult> UpdateCompany(Company company, List<IFormFile> files)
         {
             string returnedMessaage = Upload.ImageUpload(files, environment, out bool imgresult);
-            var updatedCompany = viewModel.OriginalCompany; 
 
-            
+            if (!ModelState.IsValid || (imgresult == false && returnedMessaage != "Dosya seçilmedi"))
+            {
+                ViewBag.TitleList = Enum.GetValues(typeof(CompanyTitle))
+                         .Cast<CompanyTitle>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+
+                ViewBag.PhotoMessage = returnedMessaage;
+                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
+                return View("UpdateCompany");
+            }
+            var updatedCompany = new Company();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var cevap = await httpClient.GetAsync($"{baseURL}/api/Company/GetCompanyByID/{company.ID}"))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                    updatedCompany = JsonConvert.DeserializeObject<Company>(apiCevap);
+                }
+            }
+
+            updatedCompany.CompanyName = company.CompanyName;
+            updatedCompany.CompanyTitle = company.CompanyTitle;
+            updatedCompany.MersisNo = company.MersisNo;
+            updatedCompany.TaxNumber = company.TaxNumber;
+            updatedCompany.TaxOffice = company.TaxOffice;
+            updatedCompany.PhoneNumber = company.PhoneNumber;
+            updatedCompany.Address = company.Address;
+            updatedCompany.Email = company.Email;
+            updatedCompany.NumberOfEmployees = company.NumberOfEmployees;
+            updatedCompany.YearOfFoundation = company.YearOfFoundation;
+            updatedCompany.ContractStartDate = company.ContractStartDate;
+            updatedCompany.ContractFinishDate = company.ContractFinishDate;
             updatedCompany.IsActive = true;
 
             if (imgresult)
             {
                 updatedCompany.Logo = returnedMessaage;
             }
-            
+
             using (var httpClient = new HttpClient())
             {
                 StringContent content = new StringContent(JsonConvert.SerializeObject(updatedCompany), Encoding.UTF8, "application/json");
@@ -323,13 +374,21 @@ namespace HR_Project.UI.Areas.Admin.Controllers
 
             return RedirectToAction("ListCompany");
         }
-      
+
 
         [HttpGet]
         public async Task<IActionResult> AddCompanyManager()
         {
             ViewBag.GenderList = Enum.GetValues(typeof(Gender))
                          .Cast<Gender>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+            ViewBag.CityList = Enum.GetValues(typeof(City))
+                         .Cast<City>()
                          .Select(g => new SelectListItem
                          {
                              Value = g.ToString(),
@@ -383,90 +442,95 @@ namespace HR_Project.UI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCompanyManager(User user, List<IFormFile> files)
         {
-            
-            //if (!ModelState.IsValid)
-            //{
-            //    ViewBag.GenderList = Enum.GetValues(typeof(Gender))
-            //             .Cast<Gender>()
-            //             .Select(g => new SelectListItem
-            //             {
-            //                 Value = g.ToString(),
-            //                 Text = g.ToString()
-            //             })
-            //             .ToList();
-            //    departments = new();
-            //    using (var httpClient = new HttpClient())
-            //    {
-            //        using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
-            //        {
-            //            string apiResult = await answ.Content.ReadAsStringAsync();
-            //            departments = JsonConvert.DeserializeObject<List<Department>>(apiResult);
-            //        }
-            //    }
+            string returnedMessaage = Upload.ImageUpload(files, environment, out bool imgresult);
 
-            //    jobs = new();
-            //    using (var httpClient = new HttpClient())
-            //    {
-            //        using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
-            //        {
-            //            string apiResult = await answ.Content.ReadAsStringAsync();
-            //            jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
-            //        }
-            //    }
+            if (!ModelState.IsValid || imgresult == false)
+            {
+                ViewBag.GenderList = Enum.GetValues(typeof(Gender))
+                         .Cast<Gender>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+                ViewBag.CityList = Enum.GetValues(typeof(City))
+                         .Cast<City>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+                departments = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        departments = JsonConvert.DeserializeObject<List<Department>>(apiResult);
+                    }
+                }
 
-            //    companies = new();
-            //    using (var httpClient = new HttpClient())
-            //    {
-            //        using (var answ = await httpClient.GetAsync($"{baseURL}/api/Company/GetAllCompanies"))
-            //        {
-            //            string apiResult = await answ.Content.ReadAsStringAsync();
-            //            companies = JsonConvert.DeserializeObject<List<Company>>(apiResult);
-            //        }
-            //    }
+                jobs = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
+                    }
+                }
 
-            //    var userDTo = new AddUserDTO()
-            //    {
-            //        JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),
-            //        DepartmentList = departments.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.DepartmentName }).ToList(),
-            //        CompanyList = companies.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.CompanyName }).ToList(),
-            //    };
-            //    ViewBag.AddUserDTO = userDTo;
-            //    ViewBag.jobList = jobs;
-            //    ViewBag.departmentList = departments;
-            //    ViewBag.companyList = companies;
-            //    return View("AddCompanyManager");
-            //}
+                companies = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/Company/GetAllCompanies"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        companies = JsonConvert.DeserializeObject<List<Company>>(apiResult);
+                    }
+                }
+
+                var userDTo = new AddUserDTO()
+                {
+                    JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),
+                    DepartmentList = departments.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.DepartmentName }).ToList(),
+                    CompanyList = companies.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.CompanyName }).ToList(),
+                };
+                ViewBag.AddUserDTO = userDTo;
+                ViewBag.jobList = jobs;
+                ViewBag.departmentList = departments;
+                ViewBag.companyList = companies;
+                ViewBag.PhotoMessage = returnedMessaage;
+                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
+                return View("AddCompanyManager");
+            }
             user.Role = Roles.CompanyManager;
             user.IsActive = true;
             if (user.FirstName2 == null)
                 user.FirstName2 = "";
             user.Email = (user.FirstName.ToLower() + user.FirstName2.ToLower() + "." + user.LastName.ToLower() + "@bilgeadamboost.com").Replace("ü", "u").Replace("ö", "o").Replace("ı", "i").Replace("ş", "s").Replace("ç", "c").Replace("ğ", "g");
             user.Password = Password.GeneratePassword();
-            string returnedMessaage = Upload.ImageUpload(files, environment, out bool imgresult);
 
-            if (imgresult)
+
+
+            user.Photo = returnedMessaage;//Eğer ImageUpload'dan fırlatılan değer true ise returnedMessage burda foto url'sini döndürcek
+            using (var httpClient = new HttpClient())
             {
-                user.Photo = returnedMessaage;//Eğer ImageUpload'dan fırlatılan değer true ise returnedMessage burda foto url'sini döndürcek
-                using (var httpClient = new HttpClient())
+                StringContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+                using (var answ = await httpClient.PostAsync($"{baseURL}/api/User/CreateUser", content))
                 {
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
-                    using (var answ = await httpClient.PostAsync($"{baseURL}/api/User/CreateUser", content))
-                    {
-                        string apiResult = await answ.Content.ReadAsStringAsync();
-                    }
-
+                    string apiResult = await answ.Content.ReadAsStringAsync();
                 }
 
-                string emailBody = $"Hello {user.FirstName},\n\nWelcome to our company.\n\nYour registration to MEZA Human Resources Management System has been completed successfully. Please use the login link to login to your system.\n\nYour required information for login:\n\n Email: {user.Email},\n\nUser Password: {user.Password} \n\nURL:https://ciftcikemal.azurewebsites.net,\n\nWe wish you success in your working life. MEZA Human Resources.";
-                EmailService.SendEmail(user.Email, "Welcome to MEZA Human Resources", emailBody);
-                return RedirectToAction("Index");
             }
-            else
-            {
-                ViewBag.PhotoMessage = returnedMessaage;
-                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
-                return View(user);
-            }
+
+            string emailBody = $"Hello {user.FirstName},\n\nWelcome to our company.\n\nYour registration to MEZA Human Resources Management System has been completed successfully. Please use the login link to login to your system.\n\nYour required information for login:\n\n Email: {user.Email},\n\nUser Password: {user.Password} \n\nURL:https://ciftcikemal.azurewebsites.net,\n\nWe wish you success in your working life. MEZA Human Resources.";
+            EmailService.SendEmail(user.Email, "Welcome to MEZA Human Resources", emailBody);
+            return RedirectToAction("ListCompanyManager");
+
+
 
         }
 
@@ -507,6 +571,7 @@ namespace HR_Project.UI.Areas.Admin.Controllers
 
             departments = new List<Department>();
             jobs = new List<Job>();
+            companies = new List<Company>();
 
             using (var httpClient = new HttpClient())
             {
@@ -527,6 +592,13 @@ namespace HR_Project.UI.Areas.Admin.Controllers
                     string apiResult = await answ.Content.ReadAsStringAsync();
                     jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
                 }
+
+                using (var answ = await httpClient.GetAsync($"{baseURL}/api/Company/GetAllCompanies"))
+                {
+                    string apiResult = await answ.Content.ReadAsStringAsync();
+                    companies = JsonConvert.DeserializeObject<List<Company>>(apiResult);
+                }
+
             }
 
             ViewBag.GenderList = Enum.GetValues(typeof(Gender))
@@ -537,7 +609,14 @@ namespace HR_Project.UI.Areas.Admin.Controllers
                              Text = g.ToString()
                          })
                          .ToList();
-
+            ViewBag.CityList = Enum.GetValues(typeof(City))
+                         .Cast<City>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
             var userDTo = new AddUserDTO()
             {
                 JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),
@@ -546,6 +625,7 @@ namespace HR_Project.UI.Areas.Admin.Controllers
             ViewBag.AddUserDTO = userDTo;
             ViewBag.jobList = jobs;
             ViewBag.departmentList = departments;
+            ViewBag.companyList = companies;
 
             UpdateUserDTO updateUserDTO = mapper.Map<User, UpdateUserDTO>(updateCompanyManager);
 
@@ -555,27 +635,77 @@ namespace HR_Project.UI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CompanyManagerUpdate(UpdateUserDTO updateUserDTO, List<IFormFile> files)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("UserUpdate");
-            }
             string returnedMessaage = Upload.ImageUpload(files, environment, out bool imgresult);
 
-            //updateduser.FirstName = updateUserDTO.FirstName;
-            //updateduser.FirstName2 = updateUserDTO.FirstName2;
-            //updateduser.LastName = updateUserDTO.FirstName2;
-            //updateduser.BirthPlace = updateUserDTO.BirthPlace;
-            //updateduser.PhoneNumber = updateUserDTO.PhoneNumber;
-            //updateduser.Photo = returnedMessaage;
-            //updateduser. = updateUserDTO.FirstName;
+            if (!ModelState.IsValid || (imgresult == false && returnedMessaage == "Dosya seçilmedi"))
+            {
+                ViewBag.GenderList = Enum.GetValues(typeof(Gender))
+                         .Cast<Gender>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+                ViewBag.CityList = Enum.GetValues(typeof(City))
+                         .Cast<City>()
+                         .Select(g => new SelectListItem
+                         {
+                             Value = g.ToString(),
+                             Text = g.ToString()
+                         })
+                         .ToList();
+                departments = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        departments = JsonConvert.DeserializeObject<List<Department>>(apiResult);
+                    }
+                }
+
+                jobs = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
+                    }
+                }
+
+                companies = new();
+                using (var httpClient = new HttpClient())
+                {
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/Company/GetAllCompanies"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        companies = JsonConvert.DeserializeObject<List<Company>>(apiResult);
+                    }
+                }
+
+                var userDTo = new AddUserDTO()
+                {
+                    JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),
+                    DepartmentList = departments.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.DepartmentName }).ToList(),
+                    CompanyList = companies.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.CompanyName }).ToList(),
+                };
+                ViewBag.AddUserDTO = userDTo;
+                ViewBag.jobList = jobs;
+                ViewBag.departmentList = departments;
+                ViewBag.companyList = companies;
+                ViewBag.PhotoMessage = returnedMessaage;
+                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
+                return View("CompanyManagerUpdate");
+            }
 
             using (var httpClient = new HttpClient())
             {
-                using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByID/{updateUserDTO.ID}"))
+                using (var response = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByID/{updateUserDTO.ID}"))
                 {
-                    string apiCevap = await cevap.Content.ReadAsStringAsync();
-                    updateCompanyManager = JsonConvert.DeserializeObject<User>(apiCevap);
-
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    updateCompanyManager = JsonConvert.DeserializeObject<User>(apiResponse);
                 }
                 if (imgresult)
                     updateCompanyManager.Photo = returnedMessaage;
@@ -600,12 +730,13 @@ namespace HR_Project.UI.Areas.Admin.Controllers
 
                 StringContent content = new StringContent(JsonConvert.SerializeObject(updateCompanyManager), Encoding.UTF8, "application/json");
 
-                using (var cevap = await httpClient.PutAsync($"{baseURL}/api/User/UpdateUser/{updateCompanyManager.ID}", content))
+                using (var response = await httpClient.PutAsync($"{baseURL}/api/User/UpdateUser/{updateUserDTO.ID}", content))
                 {
-                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+
                 }
             }
-      
+
             return RedirectToAction("ListCompanyManager");
         }
     }

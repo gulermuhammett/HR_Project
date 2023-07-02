@@ -1,5 +1,6 @@
 ﻿using HR_Project.Entities.Entities;
 using HR_Project.Entities.Enums;
+using System;
 
 namespace HR_Project.UI.Models.DTOs
 {
@@ -11,7 +12,7 @@ namespace HR_Project.UI.Models.DTOs
         
         public string? LastName { get; set; }
         public string? LastName2 { get; set; }
-
+        public City? City { get; set; } 
 
         public DateTime StartDateOfWork { get; set; } = DateTime.Now.Date;   //işe giriş
 

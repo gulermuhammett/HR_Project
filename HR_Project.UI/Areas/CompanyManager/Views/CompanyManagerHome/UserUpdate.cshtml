@@ -239,6 +239,16 @@
                         <label asp-for="Photo">Choose Your Photo</label>
                         <input asp-for="Photo" name="files" type="file" id="image-upload" accept=".png, .jpg, .jpeg" class="form-control form-control-md" />
                     </div>
+                    @if (ViewBag.PhotoMessage != null)
+                    {
+                        <div>
+                            <span>Hata</span>
+
+                            <span>@ViewBag.PhotoMessage</span>
+
+
+                        </div>
+                    }
                 </div>
             </div>
             <div class="my-3">
@@ -246,47 +256,9 @@
                 <div class="error-message"></div>
                 <div class="sent-message">Your message has been sent. Thank you!</div>
             </div>
-            <div style="margin-left:1000px;" class="text-center">< <input class="btn btn-success" type="submit" value="Update" onclick="submitForm()"></></div>
+            <div style="margin-left:1000px;" class="text-center">< <input class="btn btn-success" type="submit" value="Update"></></div>
         </form>
     </div>
 </section><!-- End Contact Section -->                  <!--CONTACT EKRANI            -->
-<script>
-    function submitForm() {
-        var form = document.getElementById('updateUserForm');
 
-        var fileInput = document.getElementById('image-upload');
-        var file = fileInput.files[0];
-        var fileSize = file.size;
-        var maxSizeInBytes = 4 * 1024 * 1024; // Maksimum 4MB (4 * 1024 * 1024 byte)
-        if (fileSize > maxSizeInBytes) {
-            alert("Dosya boyutu çok büyük! Lütfen maksimum 4MB boyutunda bir dosya seçin.");
-            return;
-        }
-
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
-            alert("Geçersiz dosya uzantısı! Sadece .png, .jpg veya .jpeg uzantılı dosyaları seçin.");
-            return;
-        }
-
-        // FormData nesnesini oluşturarak form verilerini alın
-        var formData = new FormData(form);
-        // Dosyayı formData'ya ekleyin
-        formData.append('files', file);
-
-        // FormData'yı doğru bir şekilde göndermek için XMLHttpRequest kullanın
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', form.action);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                alert("Güncelleme işlemi başarıyla tamamlandı!");
-                window.location.href = '/CompanyManager/CompanyManagerHome/Index'; // Index sayfasına yönlendirme
-            } else {
-                alert("Güncelleme işlemi sırasında bir hata oluştu.");
-            }
-        };
-        // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanır.
-        xhr.send(formData);
-    }
-</script>
 

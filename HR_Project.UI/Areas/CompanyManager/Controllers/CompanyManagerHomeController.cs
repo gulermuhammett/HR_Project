@@ -158,7 +158,8 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser(User user, List<IFormFile> files)
         {
-            if (!ModelState.IsValid)
+            string returnedMessaage = Upload.ImageUpload(files, _environment, out bool imgresult);
+            if (!ModelState.IsValid || imgresult==false)
             {
                 ViewBag.GenderList = Enum.GetValues(typeof(Gender))
                          .Cast<Gender>()
@@ -203,6 +204,8 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 ViewBag.AddUserDTO = userDTo;
                 ViewBag.jobList = jobs;
                 ViewBag.departmentList = departments;
+                ViewBag.PhotoMessage = returnedMessaage;
+                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
 
                 return View("AddUser");
             }
@@ -214,10 +217,8 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 user.FirstName2 = "";
             user.Email = (user.FirstName.ToLower() + user.FirstName2.ToLower() + "." + user.LastName.ToLower() + "@bilgeadamboost.com").Replace("ü", "u").Replace("ö", "o").Replace("ı", "i").Replace("ş", "s").Replace("ç", "c").Replace("ğ", "g");
             user.Password = Password.GeneratePassword();
-            string returnedMessaage = Upload.ImageUpload(files, _environment, out bool imgresult);
+            
 
-            if (imgresult)
-            {
                 user.Photo = returnedMessaage;//Eğer ImageUpload'dan fırlatılan değer true ise returnedMessage burda foto url'sini döndürcek
                 using (var httpClient = new HttpClient())
                 {
@@ -233,13 +234,7 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 string emailBody = $"Hello {user.FirstName},\n\nWelcome to our company.\n\nYour registration to MEZA Human Resources Management System has been completed successfully. Please use the login link to login to your system.\n\nYour required information for login:\n\n Email: {user.Email},\n\nUser Password: {user.Password},\n\nURL:https://ciftcikemal.azurewebsites.net,\n\nWe wish you success in your working life. MEZA Human Resources.";
                 EmailService.SendEmail(user.Email, "Welcome to MEZA Human Resources", emailBody);
                 return RedirectToAction("ListUser");
-            }
-            else
-            {
-                ViewBag.PhotoMessage = returnedMessaage;
-                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
-                return View(user);
-            }
+           
 
         }
         
@@ -298,19 +293,58 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
         [HttpPost]
         public async Task<IActionResult> UserUpdate(UpdateUserDTO updateUserDTO, List<IFormFile> files)
         {
-            if (!ModelState.IsValid)
-            {                
-                return View("UserUpdate");
-            }
             string returnedMessaage = Upload.ImageUpload(files, _environment, out bool imgresult);
+            if (!ModelState.IsValid || (imgresult==false && returnedMessaage!= "Dosya seçilmedi"))
+            {
+                departments = new List<Department>();
+                jobs = new List<Job>();
 
-            //updateduser.FirstName = updateUserDTO.FirstName;
-            //updateduser.FirstName2 = updateUserDTO.FirstName2;
-            //updateduser.LastName = updateUserDTO.FirstName2;
-            //updateduser.BirthPlace = updateUserDTO.BirthPlace;
-            //updateduser.PhoneNumber = updateUserDTO.PhoneNumber;
-            //updateduser.Photo = returnedMessaage;
-            //updateduser. = updateUserDTO.FirstName;
+                using (var httpClient = new HttpClient())
+                {
+                    using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserById/{updateUserDTO.ID}"))
+                    {
+                        string apiCevap = await cevap.Content.ReadAsStringAsync();
+                        updateduser = JsonConvert.DeserializeObject<User>(apiCevap);
+                    }
+
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllDepartment"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        departments = JsonConvert.DeserializeObject<List<Department>>(apiResult);
+                    }
+
+                    using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetAllJob"))
+                    {
+                        string apiResult = await answ.Content.ReadAsStringAsync();
+                        jobs = JsonConvert.DeserializeObject<List<Job>>(apiResult);
+                    }
+                }
+
+                ViewBag.GenderList = Enum.GetValues(typeof(Gender))
+                             .Cast<Gender>()
+                             .Select(g => new SelectListItem
+                             {
+                                 Value = g.ToString(),
+                                 Text = g.ToString()
+                             })
+                             .ToList();
+
+                var userDTo = new AddUserDTO()
+                {
+                    JobList = jobs.Select(j => new SelectListItem { Value = j.ID.ToString(), Text = j.JobName }).ToList(),
+                    DepartmentList = departments.Select(d => new SelectListItem { Value = d.ID.ToString(), Text = d.DepartmentName }).ToList(),
+                };
+                ViewBag.AddUserDTO = userDTo;
+                ViewBag.jobList = jobs;
+                ViewBag.departmentList = departments;
+                ViewBag.PhotoMessage = returnedMessaage;
+                ViewBag.EnumValues = Enum.GetValues(typeof(Roles));
+
+                UpdateUserDTO UserDTO = mapper.Map<User, UpdateUserDTO>(updateduser);
+                return View(UserDTO);
+            }
+            
+
 
             using (var httpClient = new HttpClient())
             {
@@ -322,6 +356,8 @@ namespace HR_Project.UI.Areas.CompanyManagerArea.Controllers
                 }
                 if (imgresult)
                     updateduser.Photo = returnedMessaage;
+                else if (returnedMessaage == "Dosya seçilmedi")
+                    updateduser.Photo = updateduser.Photo;
 
 
                 //updateduser = mapper.Map<UpdateUserDTO,User >(updateUserDTO);

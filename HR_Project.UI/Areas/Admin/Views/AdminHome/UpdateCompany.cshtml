@@ -1,5 +1,5 @@
 ﻿@using HR_Project.UI.Areas.Admin.Models
-@model UpdateCompanyVM
+@model Company
 
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layouttt.cshtml";
@@ -130,21 +130,21 @@
                 <div class="col-lg-6">
                     <div class="p-5">
                         <div class="row">
-                            <input type="hidden" asp-for="OriginalCompany.ID" class="form-control form-control-md" />
+                            <input type="hidden" asp-for="ID" class="form-control form-control-md" />
                             <div class="col-md-6 mb-4 pb-2">
                                 <div class="form-outline">
-                                    <label class="form-label" asp-for="OriginalCompany.CompanyName">Company Name</label>
-                                    <input asp-for="OriginalCompany.CompanyName" class="form-control form-control-md" />
-                                    <span asp-validation-for="OriginalCompany.CompanyName" class="text-danger"></span>
+                                    <label class="form-label" asp-for="CompanyName">Company Name</label>
+                                    <input asp-for="CompanyName" class="form-control form-control-md" />
+                                    <span asp-validation-for="CompanyName" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="col-md-6 mb-4 pb-2">
                                 <div class="form-outline">
-                                    <label class="form-label" asp-for="OriginalCompany.CompanyTitle">Company Title</label>
-                                    <select asp-for="OriginalCompany.CompanyTitle" class="form-control">
+                                    <label class="form-label" asp-for="CompanyTitle">Company Title</label>
+                                    <select asp-for="CompanyTitle" class="form-control">
                                         <option value="">Select a Title</option>
-                                        @foreach (var item in Model.TitleList)
+                                        @foreach (var item in ViewBag.TitleList)
                                         {
                                             <option value="@item.Value">@item.Text</option>
                                         }
@@ -157,48 +157,58 @@
                         <div class="row">
                             <div class="col-md-6 mb-4 pb-2">
                                 <div class="form-outline">
-                                    <label class="form-label" asp-for="OriginalCompany.MersisNo">Mersis Number</label>
-                                    <input asp-for="OriginalCompany.MersisNo" class="form-control form-control-md" />
-                                    <span asp-validation-for="OriginalCompany.MersisNo" class="text-danger"></span>
+                                    <label class="form-label" asp-for="MersisNo">Mersis Number</label>
+                                    <input asp-for="MersisNo" class="form-control form-control-md" />
+                                    <span asp-validation-for="MersisNo" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4 pb-2">
                                 <div class="form-outline">
-                                    <label class="form-label" asp-for="OriginalCompany.TaxNumber">Tax Number</label>
-                                    <input asp-for="OriginalCompany.TaxNumber" class="form-control form-control-md" />
-                                    <span asp-validation-for="OriginalCompany.TaxNumber" class="text-danger"></span>
+                                    <label class="form-label" asp-for="TaxNumber">Tax Number</label>
+                                    <input asp-for="TaxNumber" class="form-control form-control-md" />
+                                    <span asp-validation-for="TaxNumber" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-4 pb-2">
                             <div class="form-outline">
-                                <label class="form-label" asp-for="OriginalCompany.TaxOffice">Tax Office</label>
-                                <input asp-for="OriginalCompany.TaxOffice" class="form-control form-control-md" />
-                                <span asp-validation-for="OriginalCompany.TaxOffice" class="text-danger"></span>
+                                <label class="form-label" asp-for="TaxOffice">Tax Office</label>
+                                <input asp-for="TaxOffice" class="form-control form-control-md" />
+                                <span asp-validation-for="TaxOffice" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-4 pb-2">
                             <div class="form-outline">
-                                <label asp-for="OriginalCompany.Logo" for="image-upload" class="form-label">Please Choose An Logo</label>
-                                <input asp-for="@Model.LogoPath" name="files" type="file" id="image-upload" accept=".png, .jpg, .jpeg" class="form-control form-control-md" value="@Model.LogoPath" />
-                                <span asp-validation-for="OriginalCompany.Logo" class="text-danger"></span>
+                                <label asp-for="Logo" for="image-upload" class="form-label">Please Choose An Logo</label>
+                                <input asp-for="@Model.Logo" name="files" type="file" id="image-upload" accept=".png, .jpg, .jpeg" class="form-control form-control-md" />
+                                <span asp-validation-for="Logo" class="text-danger"></span>
                             </div>
+                            @if (ViewBag.PhotoMessage != null)
+                            {
+                                <div>
+                                    <span>Hata</span>
+
+                                    <span>@ViewBag.PhotoMessage</span>
+
+
+                                </div>
+                            }
                         </div>
 
                         <div class="mb-4 pb-2">
                             <div class="form-outline">
-                                <label class="form-label" asp-for="OriginalCompany.PhoneNumber">Phone Number</label>
-                                <input asp-for="OriginalCompany.PhoneNumber" class="form-control form-control-md" />
-                                <span asp-validation-for="OriginalCompany.PhoneNumber" class="text-danger"></span>
+                                <label class="form-label" asp-for="PhoneNumber">Phone Number</label>
+                                <input asp-for="PhoneNumber" class="form-control form-control-md" />
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="mb-4 pb-2">
                             <div class="form-outline">
-                                <label class="form-label" asp-for="OriginalCompany.Address">Address</label>
-                                <input asp-for="OriginalCompany.Address" class="form-control form-control-md" />
-                                <span asp-validation-for="OriginalCompany.Address" class="text-danger"></span>
+                                <label class="form-label" asp-for="Address">Address</label>
+                                <input asp-for="Address" class="form-control form-control-md" />
+                                <span asp-validation-for="Address" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -208,40 +218,40 @@
                     <div class="p-5">
                         <div class="mb-4 pb-2">
                             <div class="form-outline">
-                                <label class="form-label" asp-for="OriginalCompany.Email">Email</label>
-                                <input asp-for="OriginalCompany.Email" class="form-control form-control-md" />
-                                <span asp-validation-for="OriginalCompany.Email" class="text-danger"></span>
+                                <label class="form-label" asp-for="Email">Email</label>
+                                <input asp-for="Email" class="form-control form-control-md" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="mb-4 pb-2">
                             <div class="form-outline">
-                                <label class="form-label" asp-for="OriginalCompany.NumberOfEmployees">Number Of Employees</label>
-                                <input asp-for="OriginalCompany.NumberOfEmployees" class="form-control form-control-md" />
-                                <span asp-validation-for="OriginalCompany.NumberOfEmployees" class="text-danger"></span>
+                                <label class="form-label" asp-for="NumberOfEmployees">Number Of Employees</label>
+                                <input asp-for="NumberOfEmployees" class="form-control form-control-md" />
+                                <span asp-validation-for="NumberOfEmployees" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-4 pb-2">
                             <div class="form-outline form-white">
-                                <label asp-for="OriginalCompany.YearOfFoundation" class="control-label">Year Of Foundation</label>
-                                <input style="width:568.8px; height:38.18px;" asp-for="OriginalCompany.YearOfFoundation" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
-                                <span asp-validation-for="OriginalCompany.YearOfFoundation" class="text-danger"></span>
+                                <label asp-for="YearOfFoundation" class="control-label">Year Of Foundation</label>
+                                <input style="width:568.8px; height:38.18px;" asp-for="YearOfFoundation" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
+                                <span asp-validation-for="YearOfFoundation" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-4 pb-2">
                             <div class="form-outline form-white">
-                                <label asp-for="OriginalCompany.ContractStartDate" class="control-label">Contract Start Date</label>
-                                <input style="width:568.8px; height:38.18px;" asp-for="OriginalCompany.ContractStartDate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
-                                <span asp-validation-for="OriginalCompany.ContractStartDate" class="text-danger"></span>
+                                <label asp-for="ContractStartDate" class="control-label">Contract Start Date</label>
+                                <input style="width:568.8px; height:38.18px;" asp-for="ContractStartDate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
+                                <span asp-validation-for="ContractStartDate" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="mb-4 pb-2">
                             <div class="form-outline form-white">
-                                <label asp-for="OriginalCompany.ContractFinishDate" class="control-label">Contract Finish Date</label>
-                                <input style="width:568.8px; height:38.18px;" asp-for="OriginalCompany.ContractFinishDate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
-                                <span asp-validation-for="OriginalCompany.ContractFinishDate" class="text-danger"></span>
+                                <label asp-for="ContractFinishDate" class="control-label">Contract Finish Date</label>
+                                <input style="width:568.8px; height:38.18px;" asp-for="ContractFinishDate" class="dateInput form-control form-control-md" type="date" data-date="" data-date-format="DD MMMM YYYY">
+                                <span asp-validation-for="ContractFinishDate" class="text-danger"></span>
                             </div>
                         </div>
 
@@ -252,84 +262,6 @@
         </form>
     </div>
 </section><!-- End Contact Section -->                  <!--CONTACT EKRANI            -->
-<script>
-    function submitForm() {
-        var form = document.getElementById('updateUserForm');
 
-        var fileInput = document.getElementById('image-upload');
-        var file = fileInput.files[0];
-        var fileSize = file.size;
-        var maxSizeInBytes = 4 * 1024 * 1024; // Maksimum 4MB (4 * 1024 * 1024 byte)
-        if (fileSize > maxSizeInBytes) {
-            alert("Dosya boyutu çok büyük! Lütfen maksimum 4MB boyutunda bir dosya seçin.");
-            return;
-        }
-
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
-            alert("Geçersiz dosya uzantısı! Sadece .png, .jpg veya .jpeg uzantılı dosyaları seçin.");
-            return;
-        }
-
-        // FormData nesnesini oluşturarak form verilerini alın
-        var formData = new FormData(form);
-        // Dosyayı formData'ya ekleyin
-        formData.append('files', file);
-
-        // FormData'yı doğru bir şekilde göndermek için XMLHttpRequest kullanın
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', form.action);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                alert("Güncelleme işlemi başarıyla tamamlandı!");
-                window.location.href = '/CompanyManager/CompanyManagerHome/Index'; // Index sayfasına yönlendirme
-            } else {
-                alert("Güncelleme işlemi sırasında bir hata oluştu.");
-            }
-        };
-        // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanır.
-        xhr.send(formData);
-    }
-</script>
-
-<script>
-    function submitForm() {
-        var form = document.getElementById('updateUserForm');
-
-        var fileInput = document.getElementById('image-upload');
-        var file = fileInput.files[0];
-        var fileSize = file.size;
-        var maxSizeInBytes = 4 * 1024 * 1024; // Maksimum 4MB (4 * 1024 * 1024 byte)
-        if (fileSize > maxSizeInBytes) {
-            alert("Dosya boyutu çok büyük! Lütfen maksimum 4MB boyutunda bir dosya seçin.");
-            return;
-        }
-
-        var fileExtension = file.name.split('.').pop().toLowerCase();
-        if (fileExtension !== 'png' && fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
-            alert("Geçersiz dosya uzantısı! Sadece .png, .jpg veya .jpeg uzantılı dosyaları seçin.");
-            return;
-        }
-
-        // FormData nesnesini oluşturarak form verilerini alın
-        var formData = new FormData(form);
-        // Dosyayı formData'ya ekleyin
-        formData.append('files', file);
-
-        // FormData'yı doğru bir şekilde göndermek için XMLHttpRequest kullanın
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', form.action);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                alert("Güncelleme işlemi başarıyla tamamlandı!");
-                window.location.href = '/CompanyManager/CompanyManagerHome/AddUser'; // Index sayfasına yönlendirme
-            } else {
-                alert("Güncelleme işlemi sırasında bir hata oluştu.");
-            }
-        };
-        // Content-Type başlığını ayarlamaya gerek yok, otomatik olarak ayarlanır.
-        xhr.send(formData);
-    }
-</script>
 
 
