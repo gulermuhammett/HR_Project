@@ -739,5 +739,71 @@ namespace HR_Project.UI.Areas.Admin.Controllers
 
             return RedirectToAction("ListCompanyManager");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateUserToSummaryInformation(int id)
+        {
+
+            User updateUserSummary = new();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserById/{id}"))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                    updateUserSummary = JsonConvert.DeserializeObject<User>(apiCevap);
+                }
+            }
+
+
+
+
+
+            UpdateUserToSummaryInformationVM updateUserDTO = mapper.Map<User, UpdateUserToSummaryInformationVM>(updateUserSummary);
+
+            return View("UserUpdateSummaryInformationn", updateUserDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserToSummaryInformation(UpdateUserToSummaryInformationVM updateUserDTO, List<IFormFile> files)
+        {
+            string returnedMessaage = Upload.ImageUpload(files, environment, out bool imgresult);
+            if (!ModelState.IsValid || (imgresult == false && returnedMessaage != "Dosya seçilmedi"))
+            {
+                return View("UpdateUserToSummaryInformationn");
+            }
+
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByID/{updateUserDTO.ID}"))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                    updateduser = JsonConvert.DeserializeObject<User>(apiCevap);
+
+                }
+                if (imgresult)
+                    updateduser.Photo = returnedMessaage;
+
+
+                //updateduser = mapper.Map<UpdateUserDTO,User >(updateUserDTO);
+
+
+
+                updateduser.Address = updateUserDTO.Address;
+                updateduser.PhoneNumber = updateUserDTO.PhoneNumber;
+
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(updateduser), Encoding.UTF8, "application/json");
+
+                using (var cevap = await httpClient.PutAsync($"{baseURL}/api/User/UpdateUser/{updateduser.ID}", content))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                }
+            }
+            return RedirectToAction("Index");
+
+
+        }
     }
 }

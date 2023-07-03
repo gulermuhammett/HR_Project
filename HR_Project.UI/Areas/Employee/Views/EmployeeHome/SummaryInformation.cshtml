@@ -120,7 +120,7 @@
                                 <i class="bi bi-chevron-right"></i> <strong>Email :</strong> <span>@Model.Email</span>
                             </li>
                             <li>
-                                <i class="bi bi-chevron-right"></i> <strong>Adress :</strong> <span>@Model.Address</span>
+                                <i class="bi bi-chevron-right"></i> <strong>Adress :</strong> <span>@Model.Address / @Model.City</span>
                             </li>
 
                         </ul>
@@ -131,7 +131,7 @@
                             <li><i class="bi bi-chevron-right"></i> <strong>Maiden Name :</strong> <span>@Model.LastName2</span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Phone :</strong> <span>@string.Format("{0:0(###) ###-####}", double.Parse(Model.PhoneNumber))</span></li>
                             <li>
-                                <i class="bi bi-chevron-right"></i> <button data-toggle="modal" data-target="#detailModal" type="button" class="btn btn-warning">Details</button> &nbsp;<a asp-area="CompanyManager" asp-controller="CompanyManagerHome" asp-action="UserUpdate" asp-route-id="@Model.ID" type="button" class="btn btn-primary ms-4">Update</a>
+                                <i class="bi bi-chevron-right"></i> <button data-toggle="modal" data-target="#detailModal" type="button" class="btn btn-warning">Details</button> &nbsp;<a asp-area="Employee" asp-controller="EmployeeHome" asp-action="UpdateUserToSummaryInformation" asp-route-id="@Model.ID" type="button" class="btn btn-primary ms-4">Update</a>
                             </li>
                         </ul>
                     </div>
@@ -145,22 +145,22 @@
             <div class="col-lg-3 col-md-6">
                 <div class="count-box">
                     <i class="bi bi-emoji-smile"></i>
-                    <span>@ViewBag.UserCount</span>
-                    <p>Users</p>
+                    <span>@ViewBag.JobCount</span>
+                    <p>Job</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
                 <div class="count-box">
                     <i class="bi bi-journal-richtext"></i>
-                    <span>@ViewBag.DepartmentCount</span>
-                    <p>Departments</p>
+                    <span>@ViewBag.AdvancesConfirmedCount</span>
+                    <p>Confirmed Advances</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
                 <div class="count-box">
                     <i class="bi bi-headset"></i>
-                    <span>@ViewBag.JobCount</span>
-                    <p>Jobs</p>
+                    <span>@ViewBag.AdvancesCenceledCount</span>
+                    <p>Cenceled Advances</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">

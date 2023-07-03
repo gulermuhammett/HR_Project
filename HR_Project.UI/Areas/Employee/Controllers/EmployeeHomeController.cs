@@ -2,6 +2,7 @@
 using HR_Project.Entities.Entities;
 using HR_Project.Entities.Enums;
 using HR_Project.Services.Abstract;
+using HR_Project.UI.Areas.Admin.Models;
 using HR_Project.UI.Models.DTOs;
 using IK.Ui.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -54,7 +55,10 @@ namespace HR_Project.UI.Areas.Employee.Controllers
             List<User> users = new List<User>();
             HashSet<int> departments = new HashSet<int>();
             HashSet<int> jobs = new HashSet<int>();
-            HashSet<int> advances = new HashSet<int>();
+           
+            HashSet<int> advancesPending = new HashSet<int>();
+            HashSet<int> advancesCenceled = new HashSet<int>();
+            HashSet<int> advancesConfirmed = new HashSet<int>();
             using (var httpClient = new HttpClient())
             {
                 using (var answ = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByIdInclude/{HttpContext.User.FindFirst("ID").Value}"))
@@ -78,16 +82,21 @@ namespace HR_Project.UI.Areas.Employee.Controllers
                 {
                     jobs.Add((int)item.JobID);
                 }
-                if (item.Advances.Where(x => x.Status == Status.Pending && x.UserID == Convert.ToInt32(HttpContext.User.FindFirst("ID").Value)).ToList().Count()>0)
+                if (item.ID==user.ID)
                 {
-                    advances.Add(item.Advances.Where(x => x.Status == Status.Pending && x.UserID == Convert.ToInt32(HttpContext.User.FindFirst("ID").Value)).ToList().Count());
+                    advancesPending.Add(item.Advances.Where(x => x.Status == Status.Pending).ToList().Count());
+                    advancesCenceled.Add(item.Advances.Where(x => x.Status == Status.Canceled).ToList().Count());
+                    advancesConfirmed.Add(item.Advances.Where(x => x.Status == Status.Confirmed).ToList().Count());
+
                 }
                 
             }
             ViewBag.UserCount = users.Count().ToString();
             ViewBag.DepartmentCount = departments.Count().ToString();
             ViewBag.JobCount = jobs.Count().ToString();
-            ViewBag.AdvancesCount = advances.Count().ToString();
+            ViewBag.AdvancesCount = advancesPending.Count().ToString();
+            ViewBag.AdvancesCenceledCount = advancesCenceled.Count().ToString();
+            ViewBag.AdvancesConfirmedCount = advancesConfirmed.Count().ToString();
             return View(user);
         }
 
@@ -432,6 +441,72 @@ namespace HR_Project.UI.Areas.Employee.Controllers
                 }
             }
             return RedirectToAction("AdvanceIndex");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateUserToSummaryInformation(int id)
+        {
+
+            User updateUserSummary = new();
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserById/{id}"))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                    updateUserSummary = JsonConvert.DeserializeObject<User>(apiCevap);
+                }
+            }
+
+
+
+
+
+            UpdateUserToSummaryInformationVM updateUserDTO = mapper.Map<User, UpdateUserToSummaryInformationVM>(updateUserSummary);
+
+            return View("UpdateUserToSummaryInformation", updateUserDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserToSummaryInformation(UpdateUserToSummaryInformationVM updateUserDTO, List<IFormFile> files)
+        {
+            string returnedMessaage = Upload.ImageUpload(files, _environment, out bool imgresult);
+            if (!ModelState.IsValid || (imgresult == false && returnedMessaage != "Dosya seçilmedi"))
+            {
+                return View("UpdateUserToSummaryInformation");
+            }
+
+
+            using (var httpClient = new HttpClient())
+            {
+                using (var cevap = await httpClient.GetAsync($"{baseURL}/api/User/GetUserByID/{updateUserDTO.ID}"))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                    updateduser = JsonConvert.DeserializeObject<User>(apiCevap);
+
+                }
+                if (imgresult)
+                    updateduser.Photo = returnedMessaage;
+
+
+                //updateduser = mapper.Map<UpdateUserDTO,User >(updateUserDTO);
+
+
+
+                updateduser.Address = updateUserDTO.Address;
+                updateduser.PhoneNumber = updateUserDTO.PhoneNumber;
+
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(updateduser), Encoding.UTF8, "application/json");
+
+                using (var cevap = await httpClient.PutAsync($"{baseURL}/api/User/UpdateUser/{updateduser.ID}", content))
+                {
+                    string apiCevap = await cevap.Content.ReadAsStringAsync();
+                }
+            }
+            return RedirectToAction("Index");
+
+
         }
     }
 }

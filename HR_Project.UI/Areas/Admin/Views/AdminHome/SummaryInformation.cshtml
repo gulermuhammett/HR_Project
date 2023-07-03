@@ -120,7 +120,7 @@
                                 <i class="bi bi-chevron-right"></i> <strong>Email :</strong> <span>@Model.Email</span>
                             </li>
                             <li>
-                                <i class="bi bi-chevron-right"></i> <strong>Adress :</strong> <span>@Model.Address</span>
+                                <i class="bi bi-chevron-right"></i> <strong>Adress :</strong> <span>@Model.Address / @Model.City</span>
                             </li>
 
                         </ul>
@@ -131,7 +131,8 @@
                             <li><i class="bi bi-chevron-right"></i> <strong>Maiden Name :</strong> <span>@Model.LastName2</span></li>
                             <li><i class="bi bi-chevron-right"></i> <strong>Phone :</strong> <span>@string.Format("{0:0(###) ###-####}", double.Parse(Model.PhoneNumber))</span></li>
                             <li>
-                                <i class="bi bi-chevron-right"></i> <button data-toggle="modal" data-target="#detailModal" type="button" class="btn btn-warning">Details</button> &nbsp;<a asp-area="CompanyManager" asp-controller="CompanyManagerHome" asp-action="UserUpdate" asp-route-id="@Model.ID" type="button" class="btn btn-primary ms-4">Update</a>
+                                <i class="bi bi-chevron-right"></i> 
+                                <button data-toggle="modal" data-target="#detailModal" type="button" class="btn btn-warning">Details</button> &nbsp;<a asp-area="Admin" asp-controller="AdminHome" asp-action="UpdateUserToSummaryInformation" asp-route-id="@Model.ID" type="button" class="btn btn-primary ms-4">Update</a>
                             </li>
                         </ul>
                     </div>
