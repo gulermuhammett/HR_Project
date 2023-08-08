@@ -18,7 +18,7 @@ namespace HR_Project.Repositories.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=tcp:mezahumanresource.database.windows.net,1433;Initial Catalog=MezaHumanResourceDB;Persist Security Info=False;User ID=MezaHumanResource;Password=123Abcd.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-AAEQRV0;Database=HR_ProjectDB;Trusted_Connection=True;");
         }
 
         public DbSet<Company> Companies { get; set; }

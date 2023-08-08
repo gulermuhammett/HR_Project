@@ -178,8 +178,8 @@
                                         <td><p class="pclass">@item.PhoneNumber</p></td>
                                         <td><p class="pclass">@item.MersisNo</p></td>
                                         <td><p class="pclass">@item.TaxNumber</p></td>
-                                        <td><p class="pclass">@item.ContractStartDate</p></td>
-                                        <td><p class="pclass">@item.ContractFinishDate</p></td>
+                                        <td><p class="pclass">@item.ContractStartDate.Value.Date.ToString("dd.MM.yyyy")</p></td>
+                                        <td><p class="pclass">@item.ContractFinishDate.Value.Date.ToString("dd.MM.yyyy")</p></td>
                                         <td><p class="pclass">@item.NumberOfEmployees</p></td>
                                         <td>
                                             <a data-toggle="modal" data-target="@("#detailModal" + counter.ToString())" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a>
