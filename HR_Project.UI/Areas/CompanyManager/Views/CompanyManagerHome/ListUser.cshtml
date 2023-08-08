@@ -1,0 +1,322 @@
+﻿@model List<User>
+
+@{
+    Layout = "~/Areas/CompanyManager/Views/Shared/_Layouttt.cshtml";
+    int counter = 1;
+}
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- CSS -->
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    .table img {
+        max-width: 50px; /* Maksimum genişlik */
+        max-height: 50px; /* Maksimum yükseklik */
+        object-fit: cover; /* Orantılı olarak fotoğrafı sığdır */
+        border-radius: 50%; /* Yuvarlak kenarlıklar */
+    }
+
+    th {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    td {
+        font-size: 13px;
+    }
+
+    .dataTables_length label {
+        color: white;
+    }
+
+    .dataTables_info {
+        color: white;
+    }
+
+    .dataTables_filter label {
+        color: white;
+    }
+
+    .dataTables_filter {
+        margin-left: 440px;
+    }
+
+    .dataTables_paginate {
+        margin-left: 440px;
+    }
+
+    .pclass {
+        margin-top: 30px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+            .pagination li a {
+                color: black;
+                text-decoration: none;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+                .pagination li a.active {
+                    background-color: #ccc;
+                }
+
+                .pagination li a:hover {
+                    background-color: #f5f5f5;
+                }
+</style>
+
+<style>
+    /* Modal Background */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Modal Container */
+    .modal-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #212529;
+        color: white;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    /* Modal Close Button */
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+
+<section id="resume" class="resume section-show">
+    <div class="container">
+        <div class="section-title">
+            <h2>List Employee</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="table-wrap">
+                    <table id="myTable" class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th><small>#</small></th>
+                                <th><small>Photo</small></th>
+                                <th><small>Firstname</small></th>
+                                <th><small>LastName</small></th>
+                                <th><small>Email</small></th>
+                                <th><small>Address</small></th>
+                                <th><small>Phone Number</small></th>
+                                <th><small>StartDateOfWork</small></th>
+                                <th><small>Job</small></th>
+                                <th><small>Department</small></th>
+                                <th><small>Employee Operations</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (User item in Model)
+                            {
+                                <tr style="height:15px;">
+                                    <td><p class="pclass">@counter</p></td>
+                                    <td><img src="@item.Photo" alt="Profile" class="rounded-circle" /></td>
+                                    <td><p class="pclass">@item.FirstName @item.FirstName2</p></td>
+                                    <td><p class="pclass">@item.LastName @item.LastName2</p></td>
+                                    <td><p class="pclass">@item.Email</p></td>
+                                    <td><p class="pclass">@item.City</p></td>
+                                    <td><p class="pclass">@item.PhoneNumber</p></td>
+                                    <td><p class="pclass">@item.StartDateOfWork.ToShortDateString()</p></td>
+                                    <td><p class="pclass">@item.Job.JobName</p></td>
+                                    <td><p class="pclass">@item.Department.DepartmentName</p></td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#detailModal" data-user="@Json.Serialize(item)" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a>
+                                        <br /><a asp-action="UserUpdate" asp-controller="CompanyManagerHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-primary py-0">Update</a><br /><a asp-action="UserRemove" asp-controller="CompanyManagerHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-secondary py-0">Remove</a>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Resume Section -->                 <!--RESUME EKRANI            -->
+
+<div class="modal" tabindex="-1" role="dialog" id="detailModal">
+    <div class="modal-dialog modal-lg">
+        <div style="background-color:#212529" class="modal-content">
+            <div style="background-color:#212529" class="modal-body">
+                <div style="flex; align-items:center; margin-left:308.5px;">
+                    <img src="photoPath" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                </div>
+                <div style="background-color:#212529; margin-top:30px;" class="card mb-4">
+                    <table style="border:hidden;" class="table table-dark">
+                        <thead>
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>First Name :</td>
+                                <td><p class="first-name"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Middle Name :</td>
+                                <td><p class="middle-name"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Last Name :</td>
+                                <td><p class="last-name"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Maiden Name :</td>
+                                <td><p class="maiden-name"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Birth Date :</td>
+                                <td><p type="date" data-date="" data-date-format="DD MMMM YYYY" class="birth-date"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Birth Place :</td>
+                                <td><p class="birth-place"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Email :</td>
+                                <td><p class="email"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Phone :</td>
+                                <td><p class="phone"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Address :</td>
+                                <td><p class="address"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Job :</td>
+                                <td><p class="job"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Company Name :</td>
+                                <td><p class="company"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Department :</td>
+                                <td><p class="department"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Start Date Of Work :</td>
+                                <td><p style="color:white" type="text" data-date="" data-date-format="DD MMMM YYYY" class="start-date"></p></td>
+                            </tr>
+                            <tr>
+                                <td>Dismissal Date :</td>
+                                <td><p style="color:white" type="text" data-date="" data-date-format="DD MMMM YYYY" class="dismissal-date"></p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            pageLength: 6,
+            lengthMenu: [[6, 10, 20, -1], [6, 10, 20, 'Todos']]
+        });
+    });
+
+    function openModal() {
+        var modalOverlay = document.getElementById("modalOverlay");
+        modalOverlay.style.display = "block";
+    }
+
+    function closeModal() {
+        var modalOverlay = document.getElementById("modalOverlay");
+        modalOverlay.style.display = "none";
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.open-modal').click(function () {
+            var user = $(this).data('user');
+            var modal = $('#detailModal');
+            fillModalData(modal, user);
+            modal.modal('show');
+        });
+    });
+
+    function fillModalData(modal, user) {
+        var photoPath = user.Photo;
+        modal.find('.modal-title').text(user.FirstName + ' ' + user.LastName);
+        modal.find('img').attr('src', user.Photo);
+        modal.find('.first-name').text(user.FirstName);
+        modal.find('.middle-name').text(user.FirstName2);
+        modal.find('.last-name').text(user.LastName);
+        modal.find('.maiden-name').text(user.LastName2);
+        modal.find('.birth-date').text(user.FormattedBirthdate);
+        modal.find('.birth-place').text(user.BirthPlace);
+        modal.find('.email').text(user.Email);
+        modal.find('.phone').text(user.PhoneNumber);
+        modal.find('.address').text(user.Address);
+        modal.find('.job').text(user.Job.JobName);
+        modal.find('.company').text(user.Company.CompanyName);
+        modal.find('.department').text(user.Department.DepartmentName);
+        modal.find('.start-date').text(user.StartDateOfWork);
+        modal.find('.dismissal-date').text(user.FormattedDismissalDate);
+    }
+</script>
+
+
+<!-- Vendor JS Files -->
+<script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="~/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="~/assets/vendor/php-email-form/validate.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Template Main JS File -->
+<script src="~/assets/js/main2.js"></script>

@@ -1,0 +1,359 @@
+﻿@model List<Company>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layouttt.cshtml";
+    int counter = 1;
+}
+<style>
+    .table img {
+        max-width: 50px; /* Maksimum genişlik */
+        max-height: 50px; /* Maksimum yükseklik */
+        object-fit: cover; /* Orantılı olarak fotoğrafı sığdır */
+        border-radius: 50%; /* Yuvarlak kenarlıklar */
+    }
+
+    th {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    td {
+        font-size: 13px;
+    }
+
+    .dataTables_length label {
+        color: white;
+    }
+
+    .dataTables_info {
+        color: white;
+    }
+
+    .dataTables_filter label {
+        color: white;
+    }
+
+    .dataTables_filter {
+        margin-left: 440px;
+    }
+
+    .dataTables_paginate {
+        margin-left: 440px;
+    }
+
+    .pclass {
+        margin-top: 30px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+            .pagination li a {
+                color: black;
+                text-decoration: none;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+                .pagination li a.active {
+                    background-color: #ccc;
+                }
+
+                .pagination li a:hover {
+                    background-color: #f5f5f5;
+                }
+</style>
+
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet" type="text/css">
+
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- CSS -->
+    <!-- JavaScript -->
+    
+</head>
+<style>
+    .pagination {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+            .pagination li a {
+                color: black;
+                text-decoration: none;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+
+                .pagination li a.active {
+                    background-color: #ccc;
+                }
+
+                .pagination li a:hover {
+                    background-color: #f5f5f5;
+                }
+</style>
+<style>
+    .modalHeight {
+        height: 34px;
+    }
+
+    .difcol {
+        color: darkblue;
+        font-weight: bold;
+    }
+
+    .spec {
+        display: flex;
+        justify-content: space-between
+    }
+
+    .les {
+        height: 15px;
+    }
+    /*.normalTd{
+        text-align: center;
+        
+    }*/
+</style>
+
+
+<section id="resume" class="resume section-show">
+    <div class="container">
+        <div class="section-title">
+            <h2>List Company</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="table-wrap">
+                    <table id="myTable" class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th><small>#</small></th>
+                                <th><small>Logo</small></th>
+                                <th><small>CompanyName</small></th>
+                                <th><small>Email</small></th>
+                                <th><small>Address</small></th>
+                                <th><small>Phone Number</small></th>
+                                <th><small>Mersis Number</small></th>
+                                <th><small>Tax Number</small></th>
+                                <th><small>Contract Start Date</small></th>
+                                <th><small>Contract Finish Date</small></th>
+                                <th><small>Number Of Employee</small></th>
+                                <th><small>Company Operations</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (Company item in Model)
+                            {
+                                if (item.IsActive)
+                                {
+                                    <tr>
+                                        <td><p class="pclass">@counter</p></td>
+                                        <td style="text-align: center;" class="normalTd"><img src="@item.Logo" alt="Profile" class="rounded-circle" /></td>
+                                        <td><p class="pclass">@item.CompanyName</p></td>
+                                        <td><p class="pclass">@item.Email</p></td>
+                                        <td><p class="pclass">@item.Address</p></td>
+                                        <td><p class="pclass">@item.PhoneNumber</p></td>
+                                        <td><p class="pclass">@item.MersisNo</p></td>
+                                        <td><p class="pclass">@item.TaxNumber</p></td>
+                                        <td><p class="pclass">@item.ContractStartDate.Value.Date.ToString("dd.MM.yyyy")</p></td>
+                                        <td><p class="pclass">@item.ContractFinishDate.Value.Date.ToString("dd.MM.yyyy")</p></td>
+                                        <td><p class="pclass">@item.NumberOfEmployees</p></td>
+                                        <td>
+                                            <a data-toggle="modal" data-target="@("#detailModal" + counter.ToString())" style="width:70px;" class="btn btn-sm btn-warning py-0">Details</a>
+                                            <br />
+                                            <a asp-action="UpdateCompany" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-primary py-0">Update</a>
+                                            <br />
+                                            <a asp-action="CompanyRemove" asp-controller="AdminHome" asp-route-id="@item.ID" style="margin-top:9px; width:70px;" class="btn btn-sm btn-secondary py-0">Remove</a>
+                                        </td>
+                                    </tr>
+                                }
+                                <div class="modal fade" tabindex="-1" role="dialog" id="@("detailModal" + counter.ToString())">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Employee Detail</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div style="flex; align-items:center; margin-left:308.5px; ">
+                                                    <img src="@item.Logo" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                                                </div>
+                                                <div class="card mb-4">
+                                                    <div class="card-body" style="margin-top:20px; height:400px;">
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">First Name</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.CompanyName</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Last Name</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.Email</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Birthdate</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.Address</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Birth Place</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.PhoneNumber</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Email</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.MersisNo</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Phone</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.TaxNumber</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Address</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.TaxOffice</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Job</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.ContractStartDate</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Company Name</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.ContractFinishDate</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Department</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.NumberOfEmployees</p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row modalHeight">
+                                                            <div class="col-sm-3">
+                                                                <p class="mb-0">Start Date Of Work</p>
+                                                            </div>
+                                                            <div class="col-sm-9">
+                                                                <p class="text-muted mb-0">@item.YearOfFoundation</p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                @*MODAL BODYSİ BURAYA  /////////////////////////////////////////////////////////////////*@
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
+
+                                <!-- /.modal -->
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Resume Section -->                 <!--RESUME EKRANI            -->
+
+
+
+<!-- Vendor JS Files -->
+<script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="~/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="~/assets/vendor/php-email-form/validate.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Template Main JS File -->
+<script src="~/assets/js/main2.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            pageLength: 6,
+            lengthMenu: [[6, 10, 20, -1], [6, 10, 20, 'Todos']]
+        });
+    });
+</script>
+
+
+</html>
+
+
+

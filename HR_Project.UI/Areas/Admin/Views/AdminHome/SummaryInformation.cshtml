@@ -1,0 +1,287 @@
+﻿<html lang="en">
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layouttt.cshtml";
+    var jobList = ViewBag.jobList as List<Job>;
+    var departmentList = ViewBag.departmentList as List<Department>;
+}
+@model User
+<head>
+    @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">*@
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+    /* Modal Background */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Modal Container */
+    .modal-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #212529;
+        color: white;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    /* Modal Close Button */
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+
+
+<style>
+    strong {
+        color: cadetblue;
+    }
+
+    span {
+        color: white;
+        font-weight: bold;
+    }
+
+    .count-box p {
+        color: white;
+    }
+</style>
+<style>
+    .modalHeight {
+        height: 34px;
+    }
+
+
+
+    .difcol {
+        color: darkblue;
+        font-weight: bold;
+    }
+
+    .col-sm-9 p {
+        margin-left: 100px;
+    }
+
+    .col-sm-3 p {
+        margin-left: -100px;
+    }
+
+    .spec {
+        display: flex;
+        justify-content: space-between
+    }
+
+
+    .les {
+        height: 15px;
+    }
+</style>
+<!-- ======= About Section ======= -->
+<section id="about" class="about section-show">
+
+    <!-- ======= About Me ======= -->
+    <div class="about-me container">
+        <div class="section-title">
+            <h2>Summary Information</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-4" data-aos="fade-right">
+                <img src="@Model.Photo" class="img-fluid" alt="">
+            </div>
+            <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
+                <h3>Company Manager</h3>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul>
+                            <li>
+                                <i class="bi bi-chevron-right"></i> <strong>First Name :</strong> <span>@Model.FirstName</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-chevron-right"></i> <strong>Middle Name : </strong> <span>@Model.FirstName2</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-chevron-right"></i> <strong>Email :</strong> <span>@Model.Email</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-chevron-right"></i> <strong>Adress :</strong> <span>@Model.Address / @Model.City</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Last Name :</strong> <span>@Model.LastName</span></li>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Maiden Name :</strong> <span>@Model.LastName2</span></li>
+                            <li><i class="bi bi-chevron-right"></i> <strong>Phone :</strong> <span>@string.Format("{0:0(###) ###-####}", double.Parse(Model.PhoneNumber))</span></li>
+                            <li>
+                                <i class="bi bi-chevron-right"></i> 
+                                <button data-toggle="modal" data-target="#detailModal" type="button" class="btn btn-warning">Details</button> &nbsp;<a asp-area="Admin" asp-controller="AdminHome" asp-action="UpdateUserToSummaryInformation" asp-route-id="@Model.ID" type="button" class="btn btn-primary ms-4">Update</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- End About Me -->
+    <!-- ======= Counts ======= -->
+    <div class="counts container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="count-box">
+                    <i class="bi bi-emoji-smile"></i>
+                    <span>@ViewBag.UserCount</span>
+                    <p>Users</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
+                <div class="count-box">
+                    <i class="bi bi-journal-richtext"></i>
+                    <span>@ViewBag.DepartmentCount</span>
+                    <p>Departments</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+                <div class="count-box">
+                    <i class="bi bi-headset"></i>
+                    <span>@ViewBag.JobCount</span>
+                    <p>Jobs</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
+                <div class="count-box">
+                    <i class="bi bi-award"></i>
+                    <span>@ViewBag.AdvancesCount</span>
+                    <p>Pending Advances</p>
+                </div>
+            </div>
+        </div>
+    </div><!-- End Counts -->
+</section>
+
+
+
+<div class="modal" tabindex="-1" role="dialog" id="detailModal">
+    <div class="modal-dialog modal-lg">
+        <div style="background-color:#212529" class="modal-content">
+            <div style="background-color:#212529" class="modal-body">
+                <div style="flex; align-items:center; margin-left:308.5px;">
+                    <img src="@Model.Photo" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                </div>
+                <div style="background-color:#212529; margin-top:30px;" class="card mb-4">
+                    <table style="border:hidden;" class="table table-dark">
+                        <thead>
+                            <tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>First Name :</td>
+                                <td><p>@Model.FirstName</p></td>
+                            </tr>
+                            <tr>
+                                <td>Middle Name :</td>
+                                <td><p>@Model.FirstName2</p></td>
+                            </tr>
+                            <tr>
+                                <td>Last Name :</td>
+                                <td><p>@Model.LastName</p></td>
+                            </tr>
+                            <tr>
+                                <td>Maiden Name :</td>
+                                <td><p>@Model.LastName2</p></td>
+                            </tr>
+                            <tr>
+                                <td>Birth Date :</td>
+                                <td><p type="date" data-date="" data-date-format="DD MMMM YYYY">@Model.FormattedBirthdate</p></td>
+                            </tr>
+                            <tr>
+                                <td>Birth Place :</td>
+                                <td><p>@Model.BirthPlace</p></td>
+                            </tr>
+                            <tr>
+                                <td>Email :</td>
+                                <td><p>@Model.Email</p></td>
+                            </tr>
+                            <tr>
+                                <td>Phone :</td>
+                                <td><p>@string.Format("{0:0(###) ###-####}", double.Parse(Model.PhoneNumber))</p></td>
+                            </tr>
+                            <tr>
+                                <td>Address :</td>
+                                <td><p>@Model.Address</p></td>
+                            </tr>
+                            <tr>
+                                <td>Job :</td>
+                                <td><p>@Model.Job.JobName</p></td>
+                            </tr>
+                            <tr>
+                                <td>Company Name :</td>
+                                <td><p>@Model.Company.CompanyName</p></td>
+                            </tr>
+                            <tr>
+                                <td>Department :</td>
+                                <td><p>@Model.Department.DepartmentName</p></td>
+                            </tr>
+                            <tr>
+                                <td>Start Date Of Work :</td>
+                                <td><p style="color:white" type="text" data-date="" data-date-format="DD MMMM YYYY">@Model.StartDateOfWork.ToShortDateString()</p></td>
+                            </tr>
+                            <tr>
+                                <td>Dismissal Date :</td>
+                                <td><p style="color:white" type="text" data-date="" data-date-format="DD MMMM YYYY">@Model.FormattedDismissalDate</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal --
+
+<!-- Vendor JS Files -->
+<script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="~/assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="~/assets/vendor/waypoints/noframework.waypoints.js"></script>
+<script src="~/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="~/assets/js/main2.js"></script>
+
+<script>
+    function openModal() {
+        var modalOverlay = document.getElementById("modalOverlay");
+        modalOverlay.style.display = "block";
+    }
+
+    function closeModal() {
+        var modalOverlay = document.getElementById("modalOverlay");
+        modalOverlay.style.display = "none";
+    }
+</script>
+
+</html>
+
